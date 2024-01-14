@@ -12,15 +12,24 @@ class PopMartSet
     # @series - the series of the set (ex. Vacation, Valentines Day, etc.)
     # @price - the price of the set in total
     # @figures - an array of all the figures in the Popmart set
-    attr_accessor :price
-    attr_reader :brand, :series_name, :figures
+    attr_reader :brand, :series_name, :price, :figures
 
 
     # The constructor for a PopMartSet object
     def initialize(brand, series_name, price = 0.0)
         @brand = brand.upcase
         @series_name = series_name.upcase
-        @price = price
+        change_price(price)
+    end
+
+    # Requires one parameter that should be a number greater than 0.0
+    # If either of these conditions is false, then don't change the price
+    def change_price(new_price)
+        if ((new_price.is_a?(Numeric)) && new_price >= 0.0)
+            @price = new_price
+        elsif (@price.nil?)
+            @price = 0.0
+        end
     end
 
 end
