@@ -1,7 +1,28 @@
 # popmart_set.rb
 
-# This file contains the PopMartSet class. It is used to represent a singular popmart
-# set, and will be utilized in many different parts of the program overall.
+# This file contains the PopMartSet class and any helper classes it might need. 
+
+class PopMartFigure
+    # PopMartFigure is a class that represents a singular Pop Mart figurine
+    # that you would find in a blindbox
+
+    # It has three instance variables:
+
+    # @name - the name of the figurine
+    # @probability - the probability of getting that figure
+    # @is_secret - boolean value determining whether or not the figure is a secret
+    attr_reader :name, :probability, :is_secret
+
+
+    # The constructor for a PopMartFigure object
+    def initialize(name, probability, is_secret = false)
+        @name = name
+        @probability = probability
+        @is_secret = is_secret
+    end
+end
+
+
 
 class PopMartSet
     # PopMartSet is a class that represents a singular Pop Mart set of blindboxes
@@ -17,8 +38,8 @@ class PopMartSet
 
     # The constructor for a PopMartSet object
     def initialize(brand, series_name, price = 0.0)
-        @brand = brand.upcase
-        @series_name = series_name.upcase
+        @brand = brand
+        @series_name = series_name
         change_price(price)
     end
 

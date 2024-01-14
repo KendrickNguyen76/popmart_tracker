@@ -1,12 +1,35 @@
 # popmart_set_tests.rb
 
-# This file contains all of the tests for the PopMartSet class, which is located
-# in the popmart_set.rb file. This will be used to test the functionality of the class
-# and ensure that everything is working properly.
+# This file contains all of the tests for the PopMartSet class (and helper classes), 
+# which is located in the popmart_set.rb file. This will be used to test the functionality 
+# of the class and ensure that everything is working properly.
 
 # Require Statements
 require_relative "../code/popmart_set.rb"
 require "test/unit"
+
+class TestPopMartFigure < Test::Unit::TestCase
+    # TestPopMartFigure contains the test cases for the PopMartFigure class
+
+
+    # Tests the PopMartFigure constructor w/o is_secret parameter
+    def test_constructor_without_secret
+        test_figure = PopMartFigure.new("Apple", 1/6)
+
+        assert_equal(test_figure.name, "Apple")
+        assert_equal(test_figure.probability, 1/6)
+        assert_equal(test_figure.is_secret, false)
+    end
+
+    # Tests the PopMartFigure constructor w/ is_secret parameter
+    def test_constructor_with_secret
+        test_figure = PopMartFigure.new("Pumpkin King", 1/72, true)
+
+        assert_equal(test_figure.is_secret, true)
+    end
+end
+
+
 
 class TestPopMartSet < Test::Unit::TestCase
     # TestPopMartSet contains the test cases for the PopMartSet class
@@ -16,8 +39,8 @@ class TestPopMartSet < Test::Unit::TestCase
     def test_constructor_without_price
         test_set = PopMartSet.new("TestBrand", "TestSeries")
 
-        assert_equal(test_set.brand, "TESTBRAND")
-        assert_equal(test_set.series_name, "TESTSERIES")
+        assert_equal(test_set.brand, "TestBrand")
+        assert_equal(test_set.series_name, "TestSeries")
         assert_equal(test_set.price, 0.0)
     end
 
