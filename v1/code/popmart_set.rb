@@ -40,6 +40,7 @@ class PopMartSet
     def initialize(brand, series_name, price = 0.0)
         @brand = brand
         @series_name = series_name
+        @figures = Array.new
         change_price(price)
     end
 
@@ -52,5 +53,10 @@ class PopMartSet
             @price = 0.0
         end
     end
+
+    
+    def add_figure(f_name, f_prob, f_secret)
+
+    def find_figure(f_name)
 
 end
