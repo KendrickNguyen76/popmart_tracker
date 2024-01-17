@@ -67,10 +67,45 @@ class TestPopMartSet < Test::Unit::TestCase
         test_set = PopMartSet.new("test", "test")
 
         test_set.change_price(22.0)
-        assert_equal(test_set.price, 22.0);
+        assert_equal(test_set.price, 22.0)
 
         test_set.change_price(-111)
-        assert_equal(test_set.price, 22.0);
+        assert_equal(test_set.price, 22.0)
     end
 
+    # Tests that a new PopMartSet object has no figures
+    def test_new_set_had_no_figures
+        test_set = PopMartSet.new("test", "test")
+        assert_equal(test_set.num_of_figures, 0)
+    end
+
+    # Tests adding figures to a PopMartSet
+    def test_adding_figures
+        test_set = PopMartSet.new("test", "test")
+
+        test_set.add_figure("Foo", 1/6, false)
+        assert_equal(test_set.num_of_figures, 1)
+
+        test_set.add_figure("Bar", 1/72, true)
+        assert_equal(test_set.num_of_figures, 2)
+    end
+
+    # Tests finding figures in a PopMartSet
+    def test_finding_figures
+        test_set = PopMartSet.new("test", "test")
+
+        test_set.add_figure("Foo", 1/6, false)
+        test_set.add_figure("Bar", 1/72, true)
+        
+        foo = test_set.find_figure("Foo")
+        bar = test_set.find_figure("Bar")
+
+        assert_equal(foo.name, "Foo")
+        assert_equal(foo.probability, 1/6)
+        assert_equal(foo.is_secret, false)
+
+        assert_equal(bar.name, "Bar")
+        assert_equal(bar.probability, 1/72)
+        assert_equal(bar.is_secret, true)
+    end
 end

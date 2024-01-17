@@ -54,9 +54,27 @@ class PopMartSet
         end
     end
 
-    
-    def add_figure(f_name, f_prob, f_secret)
+    # Returns the number of figures in the set
+    def num_of_figures
+        return @figures.size
+    end
 
+    # Requires a string representing the figure name, a number representing the
+    # probability of getting the figure, and a boolean representing whether
+    # the figure is a secret figure. Constructs a PopMartFigure object and
+    # adds it to the @figure instance variable
+    def add_figure(f_name, f_prob, f_secret)
+        @figures.push(PopMartFigure.new(f_name, f_prob, f_secret))
+    end
+
+    # Requires a string that represents the name of the figure the user wants to find
+    # If it exists, return it. Otherwise, return nil.
     def find_figure(f_name)
+        @figures.each do |figure|
+            if (figure.name == f_name)
+                return figure
+            end
+        end
+    end
 
 end
