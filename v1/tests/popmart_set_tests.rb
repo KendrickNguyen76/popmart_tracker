@@ -14,16 +14,17 @@ class TestPopMartFigure < Test::Unit::TestCase
 
     # Tests the PopMartFigure constructor w/o is_secret parameter
     def test_constructor_without_secret
-        test_figure = PopMartFigure.new("Apple", 1/6)
+        test_figure = PopMartFigure.new("Apple", 1/6, true)
 
         assert_equal(test_figure.name, "Apple")
         assert_equal(test_figure.probability, 1/6)
+        assert_equal(test_figure.has_figure, true)
         assert_equal(test_figure.is_secret, false)
     end
 
     # Tests the PopMartFigure constructor w/ is_secret parameter
     def test_constructor_with_secret
-        test_figure = PopMartFigure.new("Pumpkin King", 1/72, true)
+        test_figure = PopMartFigure.new("Pumpkin King", 1/72, true, true)
 
         assert_equal(test_figure.is_secret, true)
     end
@@ -83,10 +84,10 @@ class TestPopMartSet < Test::Unit::TestCase
     def test_adding_figures
         test_set = PopMartSet.new("test", "test")
 
-        test_set.add_figure("Foo", 1/6, false)
+        test_set.add_figure("Foo", 1/6, true, false)
         assert_equal(test_set.num_of_figures, 1)
 
-        test_set.add_figure("Bar", 1/72, true)
+        test_set.add_figure("Bar", 1/72, false, true)
         assert_equal(test_set.num_of_figures, 2)
     end
 
@@ -94,18 +95,20 @@ class TestPopMartSet < Test::Unit::TestCase
     def test_finding_figures
         test_set = PopMartSet.new("test", "test")
 
-        test_set.add_figure("Foo", 1/6, false)
-        test_set.add_figure("Bar", 1/72, true)
+        test_set.add_figure("Foo", 1/6, false, false)
+        test_set.add_figure("Bar", 1/72, true, true)
         
         foo = test_set.find_figure("Foo")
         bar = test_set.find_figure("Bar")
 
         assert_equal(foo.name, "Foo")
         assert_equal(foo.probability, 1/6)
+        assert_equal(foo.has_figure, false)
         assert_equal(foo.is_secret, false)
 
         assert_equal(bar.name, "Bar")
         assert_equal(bar.probability, 1/72)
+        assert_equal(bar.has_figure, true)
         assert_equal(bar.is_secret, true)
     end
 end

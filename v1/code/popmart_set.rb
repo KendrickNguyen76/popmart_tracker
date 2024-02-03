@@ -10,14 +10,16 @@ class PopMartFigure
 
     # @name - the name of the figurine
     # @probability - the probability of getting that figure
+    # @has_figure - boolean value determining whether or not the user has the figure
     # @is_secret - boolean value determining whether or not the figure is a secret
-    attr_reader :name, :probability, :is_secret
+    attr_reader :name, :probability, :has_figure, :is_secret
 
 
     # The constructor for a PopMartFigure object
-    def initialize(name, probability, is_secret = false)
+    def initialize(name, probability, has_figure, is_secret = false)
         @name = name
         @probability = probability
+        @has_figure = has_figure
         @is_secret = is_secret
     end
 end
@@ -63,8 +65,8 @@ class PopMartSet
     # probability of getting the figure, and a boolean representing whether
     # the figure is a secret figure. Constructs a PopMartFigure object and
     # adds it to the @figure instance variable
-    def add_figure(f_name, f_prob, f_secret)
-        @figures.push(PopMartFigure.new(f_name, f_prob, f_secret))
+    def add_figure(f_name, f_prob, f_has, f_secret)
+        @figures.push(PopMartFigure.new(f_name, f_prob, f_has, f_secret))
     end
 
     # Requires a string that represents the name of the figure the user wants to find
