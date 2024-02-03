@@ -6,12 +6,13 @@
 
 # Require statements
 require_relative "../code/popmart_tracker_logic.rb"
+require_relative "../code/popmart_set.rb"
 require "test/unit"
 
 class TestPopTrackLogic < Test::Unit::TestCase
-    # TestPopTrackLogic contains the test cases for the TestPopLogic class
+    # TestPopTrackLogic contains the test cases for the PopTrackLogic class
 
-    
+
     # Tests that is_valid_command() returns true or false correctly depending on its input
     def test_is_valid_command_returns_correct_value
         test_tracker = PopTrackLogic.new("Test/Path")
@@ -19,5 +20,19 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_true(test_tracker.is_valid_command?("add"));
         assert_true(test_tracker.is_valid_command?("ADD"));
         assert_false(test_tracker.is_valid_command?("invalid"));
+    end
+
+    # Tests that add_set() allows you to add a set to PopTrackLogic
+    def test_can_add_pop_mart_set_objects_to_class
+        test_tracker = PopTrackLogic.new("Test/Path")
+        
+        assert_equal(test_tracker.sets.size, 0)
+        
+        test_tracker.add_set(PopMartSet.new("Brand", "Series Name"))
+
+        assert_equal(test_tracker.sets.size, 1)
+        assert_equal(test_tracker.sets["BRANDSERIES NAME"].brand, "Brand")
+        assert_equal(test_tracker.sets["BRANDSERIES NAME"].series_name, "Series Name")
+        assert_equal(test_tracker.sets["BRANDSERIES NAME"].price, 0.0)
     end
 end
