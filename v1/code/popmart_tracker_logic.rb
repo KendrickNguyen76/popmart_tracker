@@ -37,7 +37,7 @@ class PopTrackLogic
 
     # Needs to be given a PopMartSet object. Adds it to the @sets hash.
     def add_set(popmart_set)
-        key = popmart_set.brand + popmart_set.series_name
+        key = popmart_set.brand + "_" + popmart_set.series_name
         @sets[key.upcase] = popmart_set
     end
 

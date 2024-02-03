@@ -31,8 +31,8 @@ class TestPopTrackLogic < Test::Unit::TestCase
         test_tracker.add_set(PopMartSet.new("Brand", "Series Name"))
 
         assert_equal(test_tracker.sets.size, 1)
-        assert_equal(test_tracker.sets["BRANDSERIES NAME"].brand, "Brand")
-        assert_equal(test_tracker.sets["BRANDSERIES NAME"].series_name, "Series Name")
-        assert_equal(test_tracker.sets["BRANDSERIES NAME"].price, 0.0)
+        assert_equal(test_tracker.sets["BRAND_SERIES NAME"].brand, "Brand")
+        assert_equal(test_tracker.sets["BRAND_SERIES NAME"].series_name, "Series Name")
+        assert_equal(test_tracker.sets["BRAND_SERIES NAME"].price, 0.0)
     end
 end
