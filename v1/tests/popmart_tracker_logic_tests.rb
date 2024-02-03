@@ -9,6 +9,10 @@ require_relative "../code/popmart_tracker_logic.rb"
 require "test/unit"
 
 class TestPopTrackLogic < Test::Unit::TestCase
+    # TestPopTrackLogic contains the test cases for the TestPopLogic class
+
+    
+    # Tests that is_valid_command() returns true or false correctly depending on its input
     def test_is_valid_command_returns_correct_value
         test_tracker = PopTrackLogic.new("Test/Path")
 

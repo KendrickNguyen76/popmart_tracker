@@ -11,6 +11,7 @@ class PopTrackLogic
     # It has one instance variable and one class constant:
 
     # @file_path - the path of the file that PopTrackLogic will interact with
+    # @sets - a hash containing all of the Popmart Sets that the user wants to store
     # VALID_COMMAND_HASH - Hash containing the commands that the user is allowed to do
 
     VALID_COMMAND_HASH = {"ADD" => true}
@@ -19,6 +20,7 @@ class PopTrackLogic
 
     # The constructor for the PopTrackLogic class
     def initialize(file_path)
+        @sets = Hash.new
         @file_path = file_path
     end
 
