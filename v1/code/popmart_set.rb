@@ -6,7 +6,7 @@ class PopMartFigure
     # PopMartFigure is a class that represents a singular Pop Mart figurine
     # that you would find in a blindbox
 
-    # It has three instance variables:
+    # It has four instance variables:
 
     # @name - the name of the figurine
     # @probability - the probability of getting that figure
@@ -29,7 +29,7 @@ end
 class PopMartSet
     # PopMartSet is a class that represents a singular Pop Mart set of blindboxes
 
-    # It has three instance variables:
+    # It has four instance variables:
 
     # @brand - the brand/character of the set (ex. DIMOO, SkullPanda, etc.)
     # @series - the series of the set (ex. Vacation, Valentines Day, etc.)
@@ -64,7 +64,7 @@ class PopMartSet
     # Requires a string representing the figure name, a number representing the
     # probability of getting the figure, and a boolean representing whether
     # the figure is a secret figure. Constructs a PopMartFigure object and
-    # adds it to the @figure instance variable
+    # adds it to the @figures instance variable
     def add_figure(f_name, f_prob, f_has, f_secret)
         @figures.push(PopMartFigure.new(f_name, f_prob, f_has, f_secret))
     end
