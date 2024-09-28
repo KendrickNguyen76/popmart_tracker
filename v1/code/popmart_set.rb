@@ -49,7 +49,7 @@ class PopMartSet
     # Requires one parameter that should be a number greater than 0.0
     # If either of these conditions is false, then don't change the price
     def change_price(new_price)
-        if ((new_price.is_a?(Numeric)) && new_price >= 0.0)
+        if ((new_price.is_a?(Numeric)) && new_price > 0.0)
             @price = new_price
         elsif (@price.nil?)
             @price = 0.0
