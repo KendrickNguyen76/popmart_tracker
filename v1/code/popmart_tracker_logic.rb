@@ -11,7 +11,7 @@ class PopTrackLogic
     # Popmart Tracker application. This includes tasks such as writing to files, 
     # checking user commands, returning information that the uswer wants to look at, etc.
 
-    # It has one instance variable and one class constant:
+    # It has two instance variables and one class constant:
 
     # @file_path - the path of the file that PopTrackLogic will interact with
     # @sets - a hash containing all of the Popmart Sets that the user wants to store
