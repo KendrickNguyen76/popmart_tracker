@@ -18,7 +18,7 @@ class TestPopMartFigure < Test::Unit::TestCase
 
         assert_equal(test_figure.name, "Apple")
         assert_equal(test_figure.probability, 1/6)
-        assert_equal(test_figure.has_figure, true)
+        assert_equal(test_figure.is_collected, true)
         assert_equal(test_figure.is_secret, false)
     end
 
@@ -103,12 +103,36 @@ class TestPopMartSet < Test::Unit::TestCase
 
         assert_equal(foo.name, "Foo")
         assert_equal(foo.probability, 1/6)
-        assert_equal(foo.has_figure, false)
+        assert_equal(foo.is_collected, false)
         assert_equal(foo.is_secret, false)
 
         assert_equal(bar.name, "Bar")
         assert_equal(bar.probability, 1/72)
-        assert_equal(bar.has_figure, true)
+        assert_equal(bar.is_collected, true)
         assert_equal(bar.is_secret, true)
+    end
+
+    def test_finding_figures_returns_nil
+        test_set = PopMartSet.new("returns", "nil")
+
+        result = test_set.find_figure("non-existant")
+
+        assert_equal(result, nil)
+    end
+
+    # Tests changing figure's collected status using PopMartSet
+    def test_mark_figure_as_collected_changes_collected_status
+        test_set = PopMartSet.new("test", "test")
+        test_set.add_figure("Foo", 1/6, false)
+
+        test_set.mark_figure_as_collected("Foo")
+
+        assert_equal(test_set.find_figure("Foo").is_collected, true)
+    end
+
+    def test_mark_figure_as_collected_throws_exception_when_figure_is_nonexistent
+        test_set = PopMartSet.new("test", "test")
+        
+        assert_raise_message("Figure Bar does not exist within test test") {test_set.mark_figure_as_collected("Bar")}
     end
 end

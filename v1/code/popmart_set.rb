@@ -10,16 +10,16 @@ class PopMartFigure
 
     # @name - the name of the figurine
     # @probability - the probability of getting that figure
-    # @has_figure - boolean value determining whether or not the user has the figure
+    # @is_collected - boolean value determining whether or not the user has the figure
     # @is_secret - boolean value determining whether or not the figure is a secret
-    attr_reader :name, :probability, :has_figure, :is_secret
-
+    attr_reader :name, :probability, :is_secret
+    attr_accessor :is_collected
 
     # The constructor for a PopMartFigure object
-    def initialize(name, probability, has_figure, is_secret = false)
+    def initialize(name, probability, is_collected, is_secret = false)
         @name = name
         @probability = probability
-        @has_figure = has_figure
+        @is_collected = is_collected
         @is_secret = is_secret
     end
 end
@@ -63,10 +63,11 @@ class PopMartSet
 
     # Requires a string representing the figure name, a number representing the
     # probability of getting the figure, and a boolean representing whether
-    # the figure is a secret figure. Constructs a PopMartFigure object and
+    # the figure is a secret figure. The last boolean is defaulted to false if
+    # the user does not provide anything. Constructs a PopMartFigure object and
     # adds it to the @figures instance variable
-    def add_figure(f_name, f_prob, f_has, f_secret)
-        @figures.push(PopMartFigure.new(f_name, f_prob, f_has, f_secret))
+    def add_figure(f_name, f_prob, f_collected, f_secret = false)
+        @figures.push(PopMartFigure.new(f_name, f_prob, f_collected, f_secret))
     end
 
     # Requires a string that represents the name of the figure the user wants to find
@@ -76,6 +77,20 @@ class PopMartSet
             if (figure.name == f_name)
                 return figure
             end
+        end
+
+        return nil
+    end
+
+    def mark_figure_as_collected(f_name)
+        collected_figure = find_figure(f_name)
+        if (collected_figure != nil)
+            puts f_name
+            puts collected_figure
+            collected_figure.is_collected = true
+        else 
+            raise StandardError.new "Figure #{f_name} does not exist within #{@brand} #{@series_name}"
+            # 10/4/24 - Make sure to change this into a custom Exception later on
         end
     end
 
