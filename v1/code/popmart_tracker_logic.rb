@@ -41,4 +41,9 @@ class PopTrackLogic
         @sets[key.upcase] = popmart_set
     end
 
+    def add_to_specific_set(set_name, popmart_figure)
+        @sets[set_name].add_figure(popmart_figure)
+        # NEEDS TESTS
+    end
+
 end
