@@ -20,7 +20,7 @@ class PopTrackLogic
     # VALID_COMMAND_HASH - Hash containing the commands that the user is allowed to do
     attr_reader :sets
 
-    VALID_COMMAND_HASH = {"ADD" => true}
+    VALID_COMMAND_HASH = {"ADD SET" => true}
     VALID_COMMAND_HASH.default = false
 
 

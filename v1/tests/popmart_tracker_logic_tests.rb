@@ -17,8 +17,8 @@ class TestPopTrackLogic < Test::Unit::TestCase
     def test_is_valid_command_returns_correct_value
         test_tracker = PopTrackLogic.new("Test/Path")
 
-        assert_true(test_tracker.is_valid_command?("add"));
-        assert_true(test_tracker.is_valid_command?("ADD"));
+        assert_true(test_tracker.is_valid_command?("add set"));
+        assert_true(test_tracker.is_valid_command?("ADD SET"));
         assert_false(test_tracker.is_valid_command?("invalid"));
     end
 
