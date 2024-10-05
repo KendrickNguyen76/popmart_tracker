@@ -82,6 +82,9 @@ class PopMartSet
         return nil
     end
 
+    # Requires a string that represents the name of the figure the user wants to change
+    # the collected status of. If the figure exists then change its is_collected instance
+    # variable to true. If not, raise an Exception.
     def mark_figure_as_collected(f_name)
         collected_figure = find_figure(f_name)
         if (collected_figure != nil)
