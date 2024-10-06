@@ -53,7 +53,11 @@ class PopMartDatabaseHandler
     # the series name, and a double representing the price for a singular popmart set.
     # Adds it to the popmart_sets table in the database.
     def add_set_to_database(brand, series_name, price)
-        @db.execute "INSERT INTO popmart_sets (brand, series_name, price) VALUES (?, ?, ?)", [brand, series_name, price]
+        begin
+            @db.execute "INSERT INTO popmart_sets (brand, series_name, price) VALUES (?, ?, ?)", [brand, series_name, price]
+        rescue SQLite3::ConstraintException => e
+            raise StandardError.new "Set #{brand} #{series_name} already exists"
+        end
     end
     
     # Needs to be given the brand name and series name for a popmart set. Searches the 
@@ -63,6 +67,8 @@ class PopMartDatabaseHandler
         result = @db.execute("SELECT * FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand,series_name])
         if !result.empty?
             return result[0]
+        else 
+            raise StandardError.new "Set #{brand} #{series_name} does not exist in database"
         end
     end
 

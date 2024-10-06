@@ -22,9 +22,24 @@ class TestPopMartDatabse < Test::Unit::TestCase
     # Tests adding popmart sets to the database
     def test_adding_set_to_database
         @test_handler.add_set_to_database("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_database("Perrin", "Aybara", 15.768)
         test_result_one = @test_handler.get_set_information("Foo", "Bar")
+        test_result_two = @test_handler.get_set_information("Perrin", "Aybara")
 
         assert_equal(test_result_one, ["Foo", "Bar", 0.0])
+        assert_equal(test_result_two, ["Perrin", "Aybara", 15.768])
+    end
+
+    # Tests adding duplicate sets to the database, should raise error
+    def test_adding_duplicate_set
+        @test_handler.add_set_to_database("Foo", "Bar", 0.0)
+
+        assert_raise_message("Set Foo Bar already exists") {@test_handler.add_set_to_database("Foo", "Bar", 0.0)}
+    end
+
+    # Tests searching for a non-existent set in the database, should throw error
+    def test_searching_for_nonexistent_set
+        assert_raise_message("Set Does Not Exist does not exist in database") {@test_handler.get_set_information("Does Not", "Exist")}
     end
 
     # When tests end, drop all tables in the test database and close the connection
