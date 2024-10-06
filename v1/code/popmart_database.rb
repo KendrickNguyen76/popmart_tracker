@@ -64,11 +64,20 @@ class PopMartDatabaseHandler
     # popmart_sets table for the specified set and returns its row information in an array.
     # If nothing is found, an empty array is returned.
     def get_set_information(brand, series_name)
-        result = @db.execute("SELECT * FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand,series_name])
+        result = @db.execute "SELECT * FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand, series_name]
         if !result.empty?
             return result[0]
         else 
             raise StandardError.new "Set #{brand} #{series_name} does not exist in database"
+        end
+    end
+
+    def delete_specific_set(brand, series_name)
+        begin
+            get_set_information(brand, series_name)
+            @db.execute "DELETE FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand, series_name]
+        rescue StandardError => e
+            raise e
         end
     end
 

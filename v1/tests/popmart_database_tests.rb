@@ -42,6 +42,22 @@ class TestPopMartDatabse < Test::Unit::TestCase
         assert_raise_message("Set Does Not Exist does not exist in database") {@test_handler.get_set_information("Does Not", "Exist")}
     end
 
+    # Tests deleting a specific row from the popmart_sets table
+    def test_deleting_row_from_sets_table
+        @test_handler.add_set_to_database("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_database("Book", "Store", 17.76)
+
+        @test_handler.delete_specific_set("Foo", "Bar")
+
+        assert_equal(@test_handler.get_set_information("Book", "Store"), ["Book", "Store", 17.76])
+        assert_raise_message("Set Foo Bar does not exist in database") {@test_handler.get_set_information("Foo", "Bar")}
+    end
+
+    # Tests deleting nonexistent set from the database
+    def test_deleting_nonexistant_set_raises_error
+        assert_raise_message("Set Foo Bar does not exist in database") {@test_handler.delete_specific_set("Foo", "Bar")}
+    end
+
     # When tests end, drop all tables in the test database and close the connection
     def teardown
         @test_handler.reset_database_for_testing_only()
