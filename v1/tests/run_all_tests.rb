@@ -5,3 +5,4 @@
 
 require_relative "popmart_set_tests.rb"
 require_relative "popmart_tracker_logic_tests.rb"
+require_relative "popmart_database_tests.rb"
