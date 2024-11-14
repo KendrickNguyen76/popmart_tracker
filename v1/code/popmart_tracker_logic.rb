@@ -25,9 +25,8 @@ class PopTrackLogic
 
 
     # The constructor for the PopTrackLogic class
-    def initialize(file_path)
+    def initialize
         @sets = Hash.new
-        @file_path = file_path
     end
 
     # Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
