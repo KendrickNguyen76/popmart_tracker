@@ -39,11 +39,25 @@ class PopTrackLogic
         key = popmart_set.brand + "_" + popmart_set.series_name
         @sets[key.upcase] = popmart_set
     end
-
+	
+	# Needs to be given a name of a PopMart set, and a PopMartFigure object.
+	# Adds the object to the set with the specified name.
     def add_to_specific_set(set_name, popmart_figure)
         @sets[set_name].add_figure(popmart_figure)
     end
+	
+	def get_set(set_name, brand_name)
+		key = set_name + "_" + brand_name
+		case @sets.has_key?(key)
+		when true
+			return @sets[key]
+		else
+			raise ArgumentError.new("Set with name #{set_name} and brand #{brand_name} does not exist")
+		end
+	end
+end
 
+# Notes:
 	# Need to connect this to popmart_database.rb
 	# - Save all the sets that get added to @sets
 	# - Then at end of program, save them all to the database, should
@@ -60,4 +74,3 @@ class PopTrackLogic
 	# - Maybe jump straight into Tkinter? Not sure if that's wise
 	# - Probably best if i got all of the the kinks worked out in
 	#	this class first before I even do any of that. 
-end
