@@ -59,5 +59,11 @@ class TestPopTrackLogic < Test::Unit::TestCase
 		assert_equal(get_result.brand, @test_set.brand)
 		assert_equal(get_result.series_name, @test_set.series_name)
 	end
+
+	# Tests that get_set() throws an ArgumentError when given
+	# a test that doesn't exist in PopTrackLogic
+	def test_get_set_throws_argument_error_when_set_not_found
+		assert_raise_message("Set with name Exist and brand Doesnt does not exist") {@test_tracker.get_set("Doesnt", "Exist")}
+	end
 end
 

@@ -54,7 +54,7 @@ class PopTrackLogic
 		when true
 			return @sets[key]
 		else
-			raise ArgumentError.new("Set with name #{set_name} and brand #{brand_name} does not exist")
+			raise ArgumentError.new("Set with name #{series_name} and brand #{brand_name} does not exist")
 		end
 	end
 end
