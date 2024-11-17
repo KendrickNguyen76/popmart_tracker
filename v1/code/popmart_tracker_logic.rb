@@ -46,8 +46,10 @@ class PopTrackLogic
         @sets[set_name].add_figure(popmart_figure)
     end
 	
-	def get_set(set_name, brand_name)
-		key = set_name + "_" + brand_name
+	# Needs to be given the name and brand of a set. Checks to see if it
+	# exists in @sets. If it does, return it, if not raise an error.
+	def get_set(brand_name, series_name)
+		key = (brand_name + "_" + series_name).upcase
 		case @sets.has_key?(key)
 		when true
 			return @sets[key]
