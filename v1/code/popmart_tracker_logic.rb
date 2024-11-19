@@ -54,14 +54,8 @@ class PopTrackLogic
 		when true
 			return @sets[key]
 		else
-			raise ArgumentError.new("Set with name #{series_name} and brand #{brand_name} does not exist")
+			raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
 		end
-	end
-	
-	# Needs a PopMartSet object and a string representing the new name. 
-	# Allows them to change the name of the given set.
-	def modify_set_name(set, new_name)
-		# Nothing yet!
 	end
 end
 

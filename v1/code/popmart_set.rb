@@ -61,18 +61,16 @@ class PopMartSet
         return @figures.size
     end
 
-    # Requires a string representing the figure name, a number representing the
-    # probability of getting the figure, and a boolean representing whether
-    # the figure is a secret figure. The last boolean is defaulted to false if
-    # the user does not provide anything. Constructs a PopMartFigure object and
-    # adds it to the @figures instance variable
-    def add_figure_from_scratch(f_name, f_prob, f_collected, f_secret = false)
-        @figures.push(PopMartFigure.new(f_name, f_prob, f_collected, f_secret))
-    end
-
     # Requires a PopMartFigure object. Adds it to the @figures array
     def add_figure(figure)
-        @figures.push(figure)
+		figure_check = find_figure(figure.name)
+		
+		case figure_check.nil?
+		when true
+        	@figures.push(figure)
+		else
+			raise StandardError.new "Figure #{figure.name} already exists in #{@brand} #{@series_name}"	
+		end
     end
 
     # Requires a string that represents the name of the figure the user wants to find
@@ -99,7 +97,6 @@ class PopMartSet
             collected_figure.is_collected = true
         else 
             raise StandardError.new "Figure #{f_name} does not exist within #{@brand} #{@series_name}"
-            # 10/4/24 - Make sure to change this into a custom Exception later on
         end
     end
 
