@@ -80,17 +80,6 @@ class TestPopMartSet < Test::Unit::TestCase
         assert_equal(test_set.num_of_figures, 0)
     end
 
-    # Tests adding figures to a PopMartSet w/o PopMartFigure
-    def test_adding_figures_from_scratch
-        test_set = PopMartSet.new("test", "test")
-
-        test_set.add_figure_from_scratch("Foo", 1/6, true, false)
-        assert_equal(test_set.num_of_figures, 1)
-
-        test_set.add_figure_from_scratch("Bar", 1/72, false, true)
-        assert_equal(test_set.num_of_figures, 2)
-    end
-
     # Tests adding a PopMartFigure to a PopMartSet
     def test_adding_figures
         test_set = PopMartSet.new("test", "test")
@@ -98,13 +87,21 @@ class TestPopMartSet < Test::Unit::TestCase
 
         assert_equal(test_set.num_of_figures, 1)
     end
+	
+	# Tests that adding a duplicate figure raises an exception
+	def test_adding_figures_raises_exception_when_figure_already_exists
+		test_set = PopMartSet.new("test", "test")
+        test_set.add_figure(PopMartFigure.new("Foo", 3/5, false))
+
+		assert_raise_message("Figure Foo already exists in test test") {test_set.add_figure(PopMartFigure.new("Foo", 3/5, false))}
+	end
 
     # Tests finding figures in a PopMartSet
     def test_finding_figures
         test_set = PopMartSet.new("test", "test")
 
-        test_set.add_figure_from_scratch("Foo", 1/6, false, false)
-        test_set.add_figure_from_scratch("Bar", 1/72, true, true)
+        test_set.add_figure(PopMartFigure.new("Foo", 1/6, false, false))
+        test_set.add_figure(PopMartFigure.new("Bar", 1/72, true, true))
         
         foo = test_set.find_figure("Foo")
         bar = test_set.find_figure("Bar")
@@ -131,7 +128,7 @@ class TestPopMartSet < Test::Unit::TestCase
     # Tests changing figure's collected status using PopMartSet
     def test_mark_figure_as_collected_changes_collected_status
         test_set = PopMartSet.new("test", "test")
-        test_set.add_figure_from_scratch("Foo", 1/6, false)
+        test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
 
         test_set.mark_figure_as_collected("Foo")
 
