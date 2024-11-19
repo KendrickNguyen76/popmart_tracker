@@ -90,7 +90,9 @@ class PopMartSet
     # variable to true. If not, raise an Exception.
     def mark_figure_as_collected(f_name)
         collected_figure = find_figure(f_name)
-        if (!collected_figure.nil?)
+
+		case collected_figure.nil?
+		when false
 			# For testing --> Print out name of figure being found & figure object itself
             # puts f_name
             # puts collected_figure

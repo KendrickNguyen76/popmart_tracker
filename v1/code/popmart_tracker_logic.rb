@@ -57,6 +57,7 @@ class PopTrackLogic
 			raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
 		end
 	end
+
 end
 
 # Notes:
