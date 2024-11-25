@@ -14,7 +14,8 @@ class PopTrackUI
 	# of the Popmart Tracker application. This includes tasks such as: 
 	# collecting user inputs and displaying results.
 	
-
+	# @tracker - PopTrackLogic object, handles backend side of the program
+	# @running - Boolean, determines whether or not the program is still active
     # VALID_COMMAND_HASH - Hash containing the commands that the user is allowed to do
 
 	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true}
