@@ -68,7 +68,7 @@ class PopTrackUI
 			puts "\nExited Popmart Tracker"
 		when "ADD SET"
 			new_set = getSetInfo()
-			puts "New set created!"
+			puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
 			puts
 		end
 	end
@@ -96,9 +96,24 @@ class PopTrackUI
 
 			if input == ""
 				break
+			elsif can_convert_price_input?(input)
+				price = input.to_f	
+				break
+			else
+				puts "Invalid input for price, please try again."
+				puts
 			end
 		end
 
 		return price
+	end
+
+	def can_convert_price_input?(price_input)
+		begin
+			number = Float(price_input)
+			return true
+		rescue ArgumentError
+			return false
+		end
 	end
 end
