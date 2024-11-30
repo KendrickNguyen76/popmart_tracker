@@ -11,27 +11,18 @@ class PopTrackLogic
     # Popmart Tracker application. This includes tasks such as writing to files, 
     # checking user commands, returning information that the uswer wants to look at, etc.
 
-    # It has two instance variables and one class constant:
+    # It has two instance variables:
 
     # @file_path - the path of the file that PopTrackLogic will interact with
     # @sets - a hash containing all of the Popmart Sets that the user wants to store
     #         * The keys will be the brand name + the series name of the Popmart set
     #         * The values will be PopMartSet objects
-    # VALID_COMMAND_HASH - Hash containing the commands that the user is allowed to do
     attr_reader :sets
-
-    VALID_COMMAND_HASH = {"ADD SET" => true}
-    VALID_COMMAND_HASH.default = false
 
 
     # The constructor for the PopTrackLogic class
     def initialize
         @sets = Hash.new
-    end
-
-    # Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
-    def is_valid_command?(user_comm)
-        return VALID_COMMAND_HASH[user_comm.upcase]
     end
 
     # Needs to be given a PopMartSet object. Adds it to the @sets hash.

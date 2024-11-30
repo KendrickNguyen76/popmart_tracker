@@ -19,13 +19,6 @@ class TestPopTrackLogic < Test::Unit::TestCase
 		@test_set = PopMartSet.new("Brand", "Series Name")
 	end
 
-    # Tests that is_valid_command() returns true or false correctly depending on its input
-    def test_is_valid_command_returns_correct_value
-        assert_true(@test_tracker.is_valid_command?("add set"));
-        assert_true(@test_tracker.is_valid_command?("ADD SET"));
-        assert_false(@test_tracker.is_valid_command?("invalid"));
-    end
-
     # Tests that add_set() allows you to add a set to PopTrackLogic
     def test_can_add_pop_mart_set_objects_to_class
         assert_equal(@test_tracker.sets.size, 0)

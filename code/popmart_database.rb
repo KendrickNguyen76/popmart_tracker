@@ -62,7 +62,7 @@ class PopMartDatabaseHandler
     
     # Needs to be given the brand name and series name for a popmart set. Searches the 
     # popmart_sets table for the specified set and returns its row information in an array.
-    # If nothing is found, an empty array is returned.
+    # If nothing is found, raise an exception to alert the user.
     def get_set_information(brand, series_name)
         result = @db.execute "SELECT * FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand, series_name]
         if !result.empty?

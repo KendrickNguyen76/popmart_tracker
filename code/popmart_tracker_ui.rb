@@ -14,6 +14,12 @@ class PopTrackUI
 	# of the Popmart Tracker application. This includes tasks such as: 
 	# collecting user inputs and displaying results.
 	
+	# @tracker - PopTrackLogic object, handles backend side of the program
+	# @running - Boolean, determines whether or not the program is still active
+    # VALID_COMMAND_HASH - Hash containing the commands that the user is allowed to do
+
+	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true}
+    VALID_COMMAND_HASH.default = false	
 
 	# Constructor for a PopTrackUI object
 	def initialize
@@ -29,12 +35,36 @@ class PopTrackUI
 		puts "Please type in \"HELP\" if you need assistance"
 	end
 	
-	# Runs the popmart tracker. Gets user inputs and carries out
-	# specific commands based on the input
+	# Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
+    def is_valid_command?(user_comm)
+        return VALID_COMMAND_HASH[user_comm.upcase]
+    end
+
+	# Runs the popmart tracker. Gets user's input and verifies that it is a 
+	# valid command. If it is, then execute it. If not, warn the user. Repeats
+	# this action until @running is false.
 	def run_tracker
 		while @running
+			print "INPUT: "
 			input = gets.chomp
-			puts input
+			
+			if is_valid_command?(input)
+				execute_command(input)
+			else
+				puts "Invalid command, try again!"
+			end
+		end
+	end
+	
+	# Needs to be given the user's input as a string. Determines which
+	# command the user wants to carry out and performs it.
+	def execute_command(input)
+		command = input.upcase
+
+		case command
+		when "QUIT"
+			@running = false
+			puts "Exited Popmart Tracker"
 		end
 	end
 end
