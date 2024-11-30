@@ -33,6 +33,7 @@ class PopTrackUI
 	def print_start_up
 		puts "Welcome to the Popmart Tracker!"
 		puts "Please type in \"HELP\" if you need assistance"
+		puts
 	end
 	
 	# Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
@@ -64,7 +65,40 @@ class PopTrackUI
 		case command
 		when "QUIT"
 			@running = false
-			puts "Exited Popmart Tracker"
+			puts "\nExited Popmart Tracker"
+		when "ADD SET"
+			new_set = getSetInfo()
+			puts "New set created!"
+			puts
 		end
+	end
+
+	def getSetInfo
+		puts("\nPlease enter the set information:")
+		
+		print("Brand: ")
+		brand = gets.chomp
+
+		print("Series Name: ")
+		series_name = gets.chomp
+		
+		price = get_price_input
+
+		return PopMartSet.new(brand, series_name, price)
+	end
+
+	def get_price_input
+		price = nil
+		
+		while true
+			print "Price: "
+			input = gets.chomp
+
+			if input == ""
+				break
+			end
+		end
+
+		return price
 	end
 end
