@@ -17,8 +17,10 @@ class PopTrackUI
 	# @tracker - PopTrackLogic object, handles backend side of the program
 	# @running - Boolean, determines whether or not the program is still active
     # VALID_COMMAND_HASH - Hash containing the commands that the user is allowed to do
+	
+	HELP_FILE = "code/docs/help.txt" 
 
-	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true}
+	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true}
     VALID_COMMAND_HASH.default = false	
 
 	# Constructor for a PopTrackUI object
@@ -70,6 +72,8 @@ class PopTrackUI
 			new_set = getSetInfo()
 			puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
 			puts
+		when "HELP"
+			puts "Process HELP command here!"
 		end
 	end
 
