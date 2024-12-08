@@ -51,7 +51,7 @@ class PopMartSet
     def change_price(new_price)
         if ((new_price.is_a?(Numeric)) && new_price > 0.0)
             @price = new_price
-        elsif (@price.nil?)
+        elsif @price.nil?
             @price = 0.0
         end
     end

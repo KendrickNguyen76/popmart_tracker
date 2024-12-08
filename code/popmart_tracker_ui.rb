@@ -17,8 +17,10 @@ class PopTrackUI
 	# @tracker - PopTrackLogic object, handles backend side of the program
 	# @running - Boolean, determines whether or not the program is still active
     # VALID_COMMAND_HASH - Hash containing the commands that the user is allowed to do
+	
+	HELP_FILE = "code/docs/help.txt" 
 
-	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true}
+	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true}
     VALID_COMMAND_HASH.default = false	
 
 	# Constructor for a PopTrackUI object
@@ -33,6 +35,7 @@ class PopTrackUI
 	def print_start_up
 		puts "Welcome to the Popmart Tracker!"
 		puts "Please type in \"HELP\" if you need assistance"
+		puts
 	end
 	
 	# Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
@@ -64,7 +67,57 @@ class PopTrackUI
 		case command
 		when "QUIT"
 			@running = false
-			puts "Exited Popmart Tracker"
+			puts "\nExited Popmart Tracker"
+		when "ADD SET"
+			new_set = getSetInfo()
+			puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
+			puts
+		when "HELP"
+			puts "Process HELP command here!"
+		end
+	end
+
+	def getSetInfo
+		puts("\nPlease enter the set information:")
+		
+		print("Brand: ")
+		brand = gets.chomp
+
+		print("Series Name: ")
+		series_name = gets.chomp
+		
+		price = get_price_input
+
+		return PopMartSet.new(brand, series_name, price)
+	end
+
+	def get_price_input
+		price = nil
+		
+		while true
+			print "Price: "
+			input = gets.chomp
+
+			if input == ""
+				break
+			elsif can_convert_price_input?(input)
+				price = input.to_f	
+				break
+			else
+				puts "Invalid input for price, please try again."
+				puts
+			end
+		end
+
+		return price
+	end
+
+	def can_convert_price_input?(price_input)
+		begin
+			number = Float(price_input)
+			return true
+		rescue ArgumentError
+			return false
 		end
 	end
 end
