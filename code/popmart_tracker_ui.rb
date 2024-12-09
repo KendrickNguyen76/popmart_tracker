@@ -18,7 +18,7 @@ class PopTrackUI
 	
 	HELP_FILE = "code/docs/help.txt" 
 
-	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true}
+	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true}
     VALID_COMMAND_HASH.default = false	
 
 	# Constructor for a PopTrackUI object
@@ -72,18 +72,21 @@ class PopTrackUI
 			puts
 		when "HELP"
 			print_help_file()
+		when "ADD FIGURE"
+			add_figure()
 		end
 	end
 	
 	# Gets information about the set the user wants to add.
 	# Returns a PopMartSet object with that information.
 	def get_set_info
-		puts("\nPlease enter the set information:")
+		puts "\n=====ADD SET====="
+		puts "\nPlease enter the set information:"
 		
-		print("Brand: ")
+		print "Brand: "
 		brand = gets.chomp
 
-		print("Series Name: ")
+		print "Series Name: "
 		series_name = gets.chomp
 		
 		price = get_price_input
@@ -130,5 +133,9 @@ class PopTrackUI
 		puts
 		File.foreach(HELP_FILE) { |line| puts line }
 		puts
+	end
+	
+	def add_figure
+		puts "Process ADD FIGURE command here"
 	end
 end
