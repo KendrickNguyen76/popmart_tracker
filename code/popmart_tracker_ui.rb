@@ -35,6 +35,11 @@ class PopTrackUI
 		puts "Please type in \"HELP\" if you need assistance"
 		puts
 	end
+
+	# Prints out a header that includes the text provided
+	def print_header(text)
+		puts "\n=====#{text}====="
+	end
 	
 	# Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
     def is_valid_command?(user_comm)
@@ -80,8 +85,8 @@ class PopTrackUI
 	# Gets information about the set the user wants to add.
 	# Returns a PopMartSet object with that information.
 	def get_set_info
-		puts "\n=====ADD SET====="
-		puts "\nPlease enter the set information:"
+		print_header("ADD SET")
+		puts "Please enter the set information:"
 		
 		print "Brand: "
 		brand = gets.chomp
@@ -136,6 +141,15 @@ class PopTrackUI
 	end
 	
 	def add_figure
-		puts "Process ADD FIGURE command here"
+		print_header("ADD FIGURE")
+		
+		print "Set Brand: "
+		brand = gets.chomp
+
+		print "Set Series Name: "
+		series_name = gets.chomp
+
+		puts "Adding a figure to #{brand} #{series_name}"
+		puts
 	end
 end
