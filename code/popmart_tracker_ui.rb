@@ -1,9 +1,7 @@
 # popmart_tracker_ui.rb
 
-
 # File contains the PopTrackUI class which is responsible for displaying
 # the Popmart Tracker application and receiving user inputs
-
 
 # Require statements
 require_relative "popmart_tracker_logic.rb"
@@ -69,15 +67,17 @@ class PopTrackUI
 			@running = false
 			puts "\nExited Popmart Tracker"
 		when "ADD SET"
-			new_set = getSetInfo()
+			new_set = get_set_info()
 			puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
 			puts
 		when "HELP"
 			puts "Process HELP command here!"
 		end
 	end
-
-	def getSetInfo
+	
+	# Gets information about the set the user wants to add.
+	# Returns a PopMartSet object with that information.
+	def get_set_info
 		puts("\nPlease enter the set information:")
 		
 		print("Brand: ")
@@ -90,7 +90,9 @@ class PopTrackUI
 
 		return PopMartSet.new(brand, series_name, price)
 	end
-
+	
+	# Asks the user for the set price. If it is a valid price,
+	# return the inputted value. If not, ask the user again.
 	def get_price_input
 		price = nil
 		
@@ -111,11 +113,13 @@ class PopTrackUI
 
 		return price
 	end
-
+	
+	# Checks to see if the given input is a valid 
+	# value for a price.
 	def can_convert_price_input?(price_input)
 		begin
 			number = Float(price_input)
-			return true
+			return number >= 0.0
 		rescue ArgumentError
 			return false
 		end

@@ -2,6 +2,7 @@
 
 # This file contains the PopMartSet class and any helper classes it might need. 
 
+
 class PopMartFigure
     # PopMartFigure is a class that represents a singular Pop Mart figurine
     # that you would find in a blindbox
