@@ -71,7 +71,7 @@ class PopTrackUI
 			puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
 			puts
 		when "HELP"
-			puts "Process HELP command here!"
+			print_help_file()
 		end
 	end
 	
@@ -123,5 +123,12 @@ class PopTrackUI
 		rescue ArgumentError
 			return false
 		end
+	end
+
+	# Prints out each line in HELP_FILE
+	def print_help_file
+		puts
+		File.foreach(HELP_FILE) { |line| puts line }
+		puts
 	end
 end
