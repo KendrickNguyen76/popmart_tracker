@@ -26,10 +26,14 @@ class PopTrackLogic
         @sets = Hash.new
     end
 
+	def generate_dict_key(brand, series_name)
+		return (brand + "_" + series_name).upcase
+	end
+
     # Needs to be given a PopMartSet object. Adds it to the @sets hash.
     def add_set(popmart_set)
-        key = popmart_set.brand + "_" + popmart_set.series_name
-        @sets[key.upcase] = popmart_set
+        key = generate_dict_key(popmart_set.brand, popmart_set.series_name)
+        @sets[key] = popmart_set
     end
 	
 	# Needs to be given a name of a PopMart set, and a PopMartFigure object.
@@ -41,7 +45,7 @@ class PopTrackLogic
 	# Needs to be given the name and brand of a set. Checks to see if it
 	# exists in @sets. If it does, return it, if not raise an error.
 	def get_set(brand_name, series_name)
-		key = (brand_name + "_" + series_name).upcase
+		key = generate_dict_key(brand_name, series_name)
 		if @sets.has_key?(key)
 			return @sets[key]
 		else
