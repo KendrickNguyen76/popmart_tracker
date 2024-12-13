@@ -6,6 +6,7 @@
 # Require statements
 require_relative "popmart_set.rb"
 
+
 class PopTrackLogic
     # PopTrackLogic is a class that is used for handling the logical portions of the
     # Popmart Tracker application. This includes tasks such as writing to files, 

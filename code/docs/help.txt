@@ -1,5 +1,4 @@
 =====HELP PAGE=====
-
 Here are a list of commands you can run:
 
 HELP - Display the help page
