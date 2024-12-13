@@ -143,14 +143,29 @@ class PopTrackUI
 	
 	def add_figure
 		print_header("ADD FIGURE")
-		
-		print "Set Brand: "
-		brand = gets.chomp
 
-		print "Set Series Name: "
-		series_name = gets.chomp
-
-		puts @tracker.get_set(brand, series_name)
+		existing_set = prompt_for_set_name
 		puts
 	end
+	
+	# Prompts the user for the series and brand name of a set
+	# If the set does exist, return it. If not, print the error
+	# message and make them try again.
+	def prompt_for_set_name	
+		while true
+			print "Set Brand: " 
+			brand = gets.chomp
+
+			print "Set Series Name: " 
+			series_name = gets.chomp
+			
+			begin
+				return @tracker.get_set(brand, series_name)
+			rescue => error
+				puts error.message
+				puts
+			end
+		end
+	end
+
 end
