@@ -73,6 +73,7 @@ class PopTrackUI
 			puts "\nExited Popmart Tracker"
 		when "ADD SET"
 			new_set = get_set_info()
+			@tracker.add_set(new_set);
 			puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
 			puts
 		when "HELP"
@@ -149,7 +150,7 @@ class PopTrackUI
 		print "Set Series Name: "
 		series_name = gets.chomp
 
-		puts "Adding a figure to #{brand} #{series_name}"
+		puts @tracker.get_set(brand, series_name)
 		puts
 	end
 end

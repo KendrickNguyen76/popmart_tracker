@@ -42,8 +42,7 @@ class PopTrackLogic
 	# exists in @sets. If it does, return it, if not raise an error.
 	def get_set(brand_name, series_name)
 		key = (brand_name + "_" + series_name).upcase
-		case @sets.has_key?(key)
-		when true
+		if @sets.has_key?(key)
 			return @sets[key]
 		else
 			raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
