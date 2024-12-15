@@ -72,7 +72,7 @@ class PopTrackUI
 			@running = false
 			puts "\nExited Popmart Tracker"
 		when "ADD SET"
-			new_set = get_set_info()
+			new_set = get_new_set_info
 			@tracker.add_set(new_set);
 			puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
 			puts
@@ -85,7 +85,7 @@ class PopTrackUI
 	
 	# Gets information about the set the user wants to add.
 	# Returns a PopMartSet object with that information.
-	def get_set_info
+	def get_new_set_info
 		print_header("ADD SET")
 		puts "Please enter the set information:"
 		
@@ -141,10 +141,17 @@ class PopTrackUI
 		puts
 	end
 	
+	# Begins the process of adding a figure to a specified set 
 	def add_figure
 		print_header("ADD FIGURE")
 
 		existing_set = prompt_for_set_name
+		set_key = @tracker.generate_dict_key(existing_set.brand, existing_set.series_name)
+
+		print "\n#{existing_set.brand} #{existing_set.series_name} was found\n\n"
+
+		new_figure = prompt_for_new_figure
+
 		puts
 	end
 	
@@ -165,6 +172,48 @@ class PopTrackUI
 				puts error.message
 				puts
 			end
+		end
+	end
+	
+	# Prompts user for information about the new figure that
+	# will be added. Returns a PopMartFigure object.
+	def prompt_for_new_figure
+		print "Figure Name: "
+		figure_name = gets.chomp
+
+		figure_probability = get_probability_input
+
+		puts "#{figure_name} #{figure_probability}"
+	end
+	
+	# Prompts for a figure's probability. Will continually ask the
+	# the user until they input a suitable value.
+	def get_probability_input
+		probability = 0.0
+
+		while true
+			print "Figure Probability: "
+			input = gets.chomp
+
+			if valid_probability?(input)
+				probability = Rational(input).to_f
+				return probability
+			else
+				puts "Invalid probability input, try again."
+				puts
+			end
+		end
+	end
+	
+	# Checks that a given input is a valid probability.
+	# An input is considered valid if it is convertible to a Float,
+	# and is in between 0 and 1.
+	def valid_probability?(prob_input)	
+		begin
+			number = Rational(prob_input)
+			return (0.0 < number and number < 1)
+		rescue ArgumentError
+			return false
 		end
 	end
 
