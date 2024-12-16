@@ -181,8 +181,8 @@ class PopTrackUI
 		print "Figure Name: "
 		figure_name = gets.chomp
 		figure_probability = get_probability_input
-		figure_is_collected = get_collected_status
-		#figure_is_secret = get_secret_status
+		figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
+		#figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
 
 		puts "#{figure_name} #{figure_probability} #{figure_is_collected}"
 	end
@@ -218,9 +218,9 @@ class PopTrackUI
 		end
 	end
 
-	def get_collected_status
+	def get_yes_or_no_answer(prompt)
 		while true
-			print "Have you collected this figure? (Y/N): "
+			print "#{prompt} (Y/N): "
 			input = gets.chomp.downcase
 			
 			case input
