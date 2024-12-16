@@ -180,10 +180,11 @@ class PopTrackUI
 	def prompt_for_new_figure
 		print "Figure Name: "
 		figure_name = gets.chomp
-
 		figure_probability = get_probability_input
+		figure_is_collected = get_collected_status
+		#figure_is_secret = get_secret_status
 
-		puts "#{figure_name} #{figure_probability}"
+		puts "#{figure_name} #{figure_probability} #{figure_is_collected}"
 	end
 	
 	# Prompts for a figure's probability. Will continually ask the
@@ -214,6 +215,27 @@ class PopTrackUI
 			return (0.0 < number and number < 1)
 		rescue ArgumentError
 			return false
+		end
+	end
+
+	def get_collected_status
+		while true
+			print "Have you collected this figure? (Y/N): "
+			input = gets.chomp.downcase
+			
+			case input
+			when "y"
+				return true
+			when "yes"
+				return true
+			when "n"
+				return false
+			when "no"
+				return false	
+			else
+				puts "Invalid input. Try again."
+				puts
+			end
 		end
 	end
 
