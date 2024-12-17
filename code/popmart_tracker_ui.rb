@@ -182,9 +182,9 @@ class PopTrackUI
 		figure_name = gets.chomp
 		figure_probability = get_probability_input
 		figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
-		#figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
+		figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
 
-		puts "#{figure_name} #{figure_probability} #{figure_is_collected}"
+		puts "#{figure_name} #{figure_probability} #{figure_is_collected} #{figure_is_secret}"
 	end
 	
 	# Prompts for a figure's probability. Will continually ask the
