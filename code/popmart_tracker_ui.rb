@@ -21,6 +21,7 @@ class PopTrackUI
 	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true}
     VALID_COMMAND_HASH.default = false	
 
+
 	# Constructor for a PopTrackUI object
 	def initialize
 		@tracker = PopTrackLogic.new
@@ -225,7 +226,10 @@ class PopTrackUI
 			return false
 		end
 	end
-
+	
+	# Asks the user to input "yes" or "no" to whatever question is being
+	# asked by the prompt variable. Returns true if yes, returns false if
+	# no. If neither answer is given, ask the user a second time.
 	def get_yes_or_no_answer(prompt)
 		while true
 			print "#{prompt} (Y/N): "
@@ -247,6 +251,9 @@ class PopTrackUI
 		end
 	end
 	
+	# Checks to see if the figure_to_be_added can be added to the set
+	# represented by set_key. If it can, return true. If not, prints
+	# out the error message and return false.
 	def can_add_figure?(set_key, figure_to_be_added)
 		begin
 			@tracker.add_to_specific_set(set_key, figure_to_be_added)

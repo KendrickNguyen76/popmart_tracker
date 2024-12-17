@@ -25,7 +25,8 @@ class PopTrackLogic
     def initialize
         @sets = Hash.new
     end
-
+	
+	# Generates a set's dictionary key. This is in the format of BRAND_SERIESNAME
 	def generate_dict_key(brand, series_name)
 		return (brand + "_" + series_name).upcase
 	end
