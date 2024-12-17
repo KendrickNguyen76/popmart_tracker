@@ -145,14 +145,22 @@ class PopTrackUI
 	def add_figure
 		print_header("ADD FIGURE")
 
-		existing_set = prompt_for_set_name
-		set_key = @tracker.generate_dict_key(existing_set.brand, existing_set.series_name)
+		while true
+			existing_set = prompt_for_set_name
+			set_key = @tracker.generate_dict_key(existing_set.brand, existing_set.series_name)
 
-		print "\n#{existing_set.brand} #{existing_set.series_name} was found\n\n"
+			print "\n#{existing_set.brand} #{existing_set.series_name} was found\n\n"
 
-		new_figure = prompt_for_new_figure
+			new_figure = prompt_for_new_figure
 
-		puts
+			if can_add_figure?(set_key, new_figure)
+				puts "Figure #{new_figure.name}  added to #{existing_set.brand} #{existing_set.series_name}"
+				puts
+				break
+			end
+
+			puts
+		end
 	end
 	
 	# Prompts the user for the series and brand name of a set
@@ -184,7 +192,8 @@ class PopTrackUI
 		figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
 		figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
 
-		puts "#{figure_name} #{figure_probability} #{figure_is_collected} #{figure_is_secret}"
+		print "\nFigure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n\n"
+		return PopMartFigure.new(figure_name, figure_probability, figure_is_collected, figure_is_secret)
 	end
 	
 	# Prompts for a figure's probability. Will continually ask the
@@ -238,5 +247,18 @@ class PopTrackUI
 			end
 		end
 	end
-
+	
+	def can_add_figure?(set_key, figure_to_be_added)
+		@tracker.add_to_specific_set(set_key, figure_to_be_added)
+		"""
+		begin
+			@tracker.add_to_specific_set(set_key, figure_to_be_added)
+			return true
+		rescue => error
+			puts error.message
+			puts
+			return false
+		end
+		"""
+	end
 end
