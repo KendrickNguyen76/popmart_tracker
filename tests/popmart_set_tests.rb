@@ -29,10 +29,10 @@ class TestPopMartFigure < Test::Unit::TestCase
         assert_equal(test_figure.is_secret, true)
     end
 
-	# Tests == operator
+	# Tests == operator correctly returns true
 	def test_equality_operator_returns_true
-		test_figure = PopMartFigure.new("test", 1/8, false, true)
-		test_figure2 = PopMartFigure.new("test", 1/8, false, true)
+		test_figure = PopMartFigure.new("test", Float(1/8), false, true)
+		test_figure2 = PopMartFigure.new("test", Float(1/8), false, true)
 
 		assert_true(test_figure == test_figure2)
 	end
@@ -139,7 +139,8 @@ class TestPopMartSet < Test::Unit::TestCase
         assert_equal(bar.is_collected, true)
         assert_equal(bar.is_secret, true)
     end
-
+	
+	# Tests that find_figure returns nil when a figure doesn't exist
     def test_finding_figures_returns_nil
         test_set = PopMartSet.new("returns", "nil")
 
@@ -157,7 +158,8 @@ class TestPopMartSet < Test::Unit::TestCase
 
         assert_equal(test_set.find_figure("Foo").is_collected, true)
     end
-
+	
+	# Tests that mark_figure_as_collected does throw exception
     def test_mark_figure_as_collected_throws_exception_when_figure_is_nonexistent
         test_set = PopMartSet.new("test", "test")
         
