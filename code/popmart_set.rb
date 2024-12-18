@@ -84,19 +84,15 @@ class PopMartSet
 		end
     end
 	
-	"""
-	# Come back to this when i get == working for PopMartFigure	
+	def delete_figure(figure_name)
+		figure_check = find_figure(figure_name)
 
-	def delete_figure(figure)
-		figure_check = find_figure(figure.name)
-
-		if figure_check.nil?
-					
+		if !(figure_check.nil?)
+			# Delete the figure here	
 		else
-
+			raise StandardError.new "Figure #{figure_name} does not exist in #{@brand} #{@series_name}"
 		end
 	end
-	"""
 
     # Requires a string that represents the name of the figure the user wants to find
     # If it exists, return it. Otherwise, return nil.
