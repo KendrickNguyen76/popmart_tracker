@@ -223,7 +223,7 @@ class PopTrackUI
 	def valid_probability?(prob_input)	
 		begin
 			number = Rational(prob_input)
-			return (0.0 < number and number < 1)
+			return (0.0 < number && number < 1)
 		rescue ArgumentError
 			return false
 		end

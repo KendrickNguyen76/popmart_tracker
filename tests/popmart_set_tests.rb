@@ -28,6 +28,29 @@ class TestPopMartFigure < Test::Unit::TestCase
 
         assert_equal(test_figure.is_secret, true)
     end
+
+	# Tests == operator
+	def test_equality_operator_returns_true
+		test_figure = PopMartFigure.new("test", 1/8, false, true)
+		test_figure2 = PopMartFigure.new("test", 1/8, false, true)
+
+		assert_true(test_figure == test_figure2)
+	end
+
+	# Tests == operator correctly returns false
+	def test_equality_operator_returns_false
+		test_figure = PopMartFigure.new("test", 1/8, false, true)
+		test_figure2 = PopMartFigure.new("test2", 1/8, false, true)
+		test_figure3 = PopMartFigure.new("test", 0.25, false, true)
+		test_figure4 = PopMartFigure.new("test", 1/8, true, true)
+		test_figure5 = PopMartFigure.new("test", 1/8, false, false)
+
+		assert_false(test_figure == test_figure2)
+		assert_false(test_figure == test_figure3)
+		assert_false(test_figure == test_figure4)
+		assert_false(test_figure == test_figure5)
+		assert_false(test_figure == "Hello")
+	end
 end
 
 
