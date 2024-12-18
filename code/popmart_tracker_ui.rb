@@ -18,8 +18,8 @@ class PopTrackUI
 	
 	HELP_FILE = "code/docs/help.txt" 
 
-	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true}
-    VALID_COMMAND_HASH.default = false	
+	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true}
+	VALID_COMMAND_HASH.default = false	
 
 
 	# Constructor for a PopTrackUI object
@@ -81,6 +81,8 @@ class PopTrackUI
 			print_help_file()
 		when "ADD FIGURE"
 			add_figure()
+		when "MARK FIGURE"
+			mark_figure()
 		end
 	end
 	
@@ -262,6 +264,19 @@ class PopTrackUI
 			puts error.message
 			return false
 		end
+	end
+
+	def mark_figure
+		print_header("MARK FIGURE")
+		
+		existing_set = prompt_for_set_name
+		existing_figure = prompt_for_figure_name
+
+		puts
+	end
+
+	def prompt_for_figure_name
+		puts "Prompt for figure here"		
 	end
 
 end
