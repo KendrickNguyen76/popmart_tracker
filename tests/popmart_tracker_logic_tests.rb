@@ -18,6 +18,13 @@ class TestPopTrackLogic < Test::Unit::TestCase
 		@test_tracker = PopTrackLogic.new
 		@test_set = PopMartSet.new("Brand", "Series Name")
 	end
+	
+	# Tests that generate_dict_key returns the correct result
+	def test_generate_dict_key_creates_key_in_correct_format
+		test_key = @test_tracker.generate_dict_key(@test_set.brand, @test_set.series_name)
+
+		assert_equal(test_key, "BRAND_SERIES NAME")
+	end
 
     # Tests that add_set() allows you to add a set to PopTrackLogic
     def test_can_add_pop_mart_set_objects_to_class

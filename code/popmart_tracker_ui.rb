@@ -18,8 +18,9 @@ class PopTrackUI
 	
 	HELP_FILE = "code/docs/help.txt" 
 
-	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true}
-    VALID_COMMAND_HASH.default = false	
+	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true}
+	VALID_COMMAND_HASH.default = false	
+
 
 	# Constructor for a PopTrackUI object
 	def initialize
@@ -72,19 +73,22 @@ class PopTrackUI
 			@running = false
 			puts "\nExited Popmart Tracker"
 		when "ADD SET"
-			new_set = get_set_info()
+			new_set = get_new_set_info
+			@tracker.add_set(new_set);
 			puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
 			puts
 		when "HELP"
 			print_help_file()
 		when "ADD FIGURE"
 			add_figure()
+		when "MARK FIGURE"
+			mark_figure()
 		end
 	end
 	
 	# Gets information about the set the user wants to add.
 	# Returns a PopMartSet object with that information.
-	def get_set_info
+	def get_new_set_info
 		print_header("ADD SET")
 		puts "Please enter the set information:"
 		
@@ -140,16 +144,139 @@ class PopTrackUI
 		puts
 	end
 	
+	# Begins the process of adding a figure to a specified set 
 	def add_figure
-		print_header("ADD FIGURE")
+		while true
+			print_header("ADD FIGURE")
+			existing_set = prompt_for_set_name
+			set_key = @tracker.generate_dict_key(existing_set.brand, existing_set.series_name)
+
+			print "#{existing_set.brand} #{existing_set.series_name} was found\n\n"
+
+			new_figure = prompt_for_new_figure
+
+			if can_add_figure?(set_key, new_figure)
+				puts "Figure #{new_figure.name}  added to #{existing_set.brand} #{existing_set.series_name}"
+				puts
+				break
+			end
+
+			puts
+		end
+	end
+	
+	# Prompts the user for the series and brand name of a set
+	# If the set does exist, return it. If not, print the error
+	# message and make them try again.
+	def prompt_for_set_name	
+		while true
+			print "Set Brand: " 
+			brand = gets.chomp
+
+			print "Set Series Name: " 
+			series_name = gets.chomp
+			
+			begin
+				return @tracker.get_set(brand, series_name)
+			rescue => error
+				puts error.message
+				puts
+			end
+		end
+	end
+	
+	# Prompts user for information about the new figure that
+	# will be added. Returns a PopMartFigure object.
+	def prompt_for_new_figure
+		print "Figure Name: "
+		figure_name = gets.chomp
+		figure_probability = get_probability_input
+		figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
+		figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
+
+		print "Figure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
+		return PopMartFigure.new(figure_name, figure_probability, figure_is_collected, figure_is_secret)
+	end
+	
+	# Prompts for a figure's probability. Will continually ask the
+	# the user until they input a suitable value.
+	def get_probability_input
+		probability = 0.0
+
+		while true
+			print "Figure Probability: "
+			input = gets.chomp
+
+			if valid_probability?(input)
+				probability = Rational(input).to_f
+				return probability
+			else
+				puts "Invalid probability input, try again."
+				puts
+			end
+		end
+	end
+	
+	# Checks that a given input is a valid probability.
+	# An input is considered valid if it is convertible to a Float,
+	# and is in between 0 and 1.
+	def valid_probability?(prob_input)	
+		begin
+			number = Rational(prob_input)
+			return (0.0 < number && number < 1)
+		rescue ArgumentError
+			return false
+		end
+	end
+	
+	# Asks the user to input "yes" or "no" to whatever question is being
+	# asked by the prompt variable. Returns true if yes, returns false if
+	# no. If neither answer is given, ask the user a second time.
+	def get_yes_or_no_answer(prompt)
+		while true
+			print "#{prompt} (Y/N): "
+			input = gets.chomp.downcase
+			
+			case input
+			when "y"
+				return true
+			when "yes"
+				return true
+			when "n"
+				return false
+			when "no"
+				return false	
+			else
+				puts "Invalid input. Try again."
+				puts
+			end
+		end
+	end
+	
+	# Checks to see if the figure_to_be_added can be added to the set
+	# represented by set_key. If it can, return true. If not, prints
+	# out the error message and return false.
+	def can_add_figure?(set_key, figure_to_be_added)
+		begin
+			@tracker.add_to_specific_set(set_key, figure_to_be_added)
+			return true
+		rescue => error
+			puts error.message
+			return false
+		end
+	end
+
+	def mark_figure
+		print_header("MARK FIGURE")
 		
-		print "Set Brand: "
-		brand = gets.chomp
+		existing_set = prompt_for_set_name
+		existing_figure = prompt_for_figure_name
 
-		print "Set Series Name: "
-		series_name = gets.chomp
-
-		puts "Adding a figure to #{brand} #{series_name}"
 		puts
 	end
+
+	def prompt_for_figure_name
+		puts "Prompt for figure here"		
+	end
+
 end
