@@ -276,7 +276,10 @@ class PopTrackUI
 	end
 
 	def prompt_for_figure_name
-		puts "Prompt for figure here"		
+		print "Enter figure name: "
+		figure_name = gets.chomp
+
+		return figure_name
 	end
 
 end
