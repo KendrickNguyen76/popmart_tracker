@@ -83,7 +83,9 @@ class PopMartSet
 			raise StandardError.new "Figure #{figure.name} already exists in #{@brand} #{@series_name}"	
 		end
     end
-	
+
+	# Takes in the name of a figure. If the figure exists in the set,
+	# delete it. If not, raise an error.
 	def delete_figure(figure_name)
 		figure_check = find_figure(figure_name)
 

@@ -163,6 +163,17 @@ class TestPopMartSet < Test::Unit::TestCase
     def test_mark_figure_as_collected_throws_exception_when_figure_is_nonexistent
         test_set = PopMartSet.new("test", "test")
         
-        assert_raise_message("Figure Bar does not exist within test test") {test_set.mark_figure_as_collected("Bar")}
+        assert_raise_message("Figure Bar does not exist within test test") {
+			test_set.mark_figure_as_collected("Bar")
+		}
     end
+
+	# Tests that delete_figure does throw exception	
+	def test_delete_figure_raises_error_if_figure_nonexistant
+		test_set = PopMartSet.new("test", "test")
+
+		assert_raise("Figure Bar does not exist in test test") {
+			test_set.delete_figure("Bar")
+		}
+	end
 end
