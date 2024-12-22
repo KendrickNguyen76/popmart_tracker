@@ -3,4 +3,6 @@ Here are a list of commands you can run:
 
 HELP - Display the help page
 ADD SET - Add a Popmart set
+ADD FIGURE - Add a figure to a Popmart set
+MARK FIGURE - Mark a figure as collected
 QUIT - Exit the program

@@ -265,7 +265,8 @@ class PopTrackUI
 			return false
 		end
 	end
-
+	
+	# Executes the "MARK FIGURE" command
 	def mark_figure
 		print_header("MARK FIGURE")
 		
@@ -274,7 +275,9 @@ class PopTrackUI
 
 		puts
 	end
-
+	
+	# Prompts user for the name of the figure they want to edit
+	# Returns whatever the user inputs
 	def prompt_for_figure_name
 		print "Enter figure name: "
 		figure_name = gets.chomp
