@@ -116,7 +116,9 @@ class TestPopMartSet < Test::Unit::TestCase
 		test_set = PopMartSet.new("test", "test")
         test_set.add_figure(PopMartFigure.new("Foo", 3/5, false))
 
-		assert_raise_message("Figure Foo already exists in test test") {test_set.add_figure(PopMartFigure.new("Foo", 3/5, false))}
+		assert_raise_message("Figure Foo already exists in test test") {
+			test_set.add_figure(PopMartFigure.new("Foo", 3/5, false))
+		}
 	end
 
     # Tests finding figures in a PopMartSet
@@ -167,6 +169,20 @@ class TestPopMartSet < Test::Unit::TestCase
 			test_set.mark_figure_as_collected("Bar")
 		}
     end
+	
+	# Tests that delete_figure correctly deletes the specified figure
+	def test_delete_figure_deletes_correct_figure
+		test_set = PopMartSet.new("test", "test")
+		test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
+		test_set.add_figure(PopMartFigure.new("Bar", 1/6, true))
+
+		assert_equal(test_set.num_of_figures, 2)
+
+		test_set.delete_figure("Foo")
+
+		assert_equal(test_set.num_of_figures, 1)
+		assert_true(test_set.find_figure("Foo").nil?)
+	end
 
 	# Tests that delete_figure does throw exception	
 	def test_delete_figure_raises_error_if_figure_nonexistant

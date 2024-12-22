@@ -90,7 +90,7 @@ class PopMartSet
 		figure_check = find_figure(figure_name)
 
 		if !(figure_check.nil?)
-			# Delete the figure here	
+			@figures.delete(figure_check)
 		else
 			raise StandardError.new "Figure #{figure_name} does not exist in #{@brand} #{@series_name}"
 		end
