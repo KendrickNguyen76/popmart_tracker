@@ -24,14 +24,14 @@ class PopMartFigure
         @is_secret = is_secret
     end
 
-	# Equality operator. Two PopMartFigure objects are 
-	# the same if all instance variables are equal.
-	def ==(other)
-		return (self.class == other.class &&
-			self.name == other.name &&
-			self.probability == other.probability &&
-			self.is_collected == other.is_collected &&
-			self.is_secret == other.is_secret)
+    # Equality operator. Two PopMartFigure objects are 
+    # the same if all instance variables are equal.
+    def ==(other)
+        return (self.class == other.class &&
+        self.name == other.name &&
+        self.probability == other.probability &&
+        self.is_collected == other.is_collected &&
+        self.is_secret == other.is_secret)
 	end
 end
 
@@ -74,27 +74,27 @@ class PopMartSet
 	
     # Requires a PopMartFigure object. Adds it to the @figures array
     def add_figure(figure)
-		figure_check = find_figure(figure.name)
+        figure_check = find_figure(figure.name)
 		
-		case figure_check.nil?
-		when true
-        	@figures.push(figure)
-		else
-			raise StandardError.new "Figure #{figure.name} already exists in #{@brand} #{@series_name}"	
-		end
+        case figure_check.nil?
+        when true
+            @figures.push(figure)
+        else
+            raise StandardError.new "Figure #{figure.name} already exists in #{@brand} #{@series_name}"	
+        end
     end
 
-	# Takes in the name of a figure. If the figure exists in the set,
-	# delete it. If not, raise an error.
-	def delete_figure(figure_name)
-		figure_check = find_figure(figure_name)
+    # Takes in the name of a figure. If the figure exists in the set,
+    # delete it. If not, raise an error.
+    def delete_figure(figure_name)
+        figure_check = find_figure(figure_name)
 
-		if !(figure_check.nil?)
-			@figures.delete(figure_check)
-		else
-			raise StandardError.new "Figure #{figure_name} does not exist in #{@brand} #{@series_name}"
-		end
-	end
+        if !(figure_check.nil?)
+            @figures.delete(figure_check)
+        else
+            raise StandardError.new "Figure #{figure_name} does not exist in #{@brand} #{@series_name}"
+        end
+    end
 
     # Requires a string that represents the name of the figure the user wants to find
     # If it exists, return it. Otherwise, return nil.
