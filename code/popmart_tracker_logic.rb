@@ -26,10 +26,10 @@ class PopTrackLogic
         @sets = Hash.new
     end
 	
-	# Generates a set's dictionary key. This is in the format of BRAND_SERIESNAME
-	def generate_dict_key(brand, series_name)
-		return (brand + "_" + series_name).upcase
-	end
+    # Generates a set's dictionary key. This is in the format of BRAND_SERIESNAME
+    def generate_dict_key(brand, series_name)
+        return (brand + "_" + series_name).upcase
+    end
 
     # Needs to be given a PopMartSet object. Adds it to the @sets hash.
     def add_set(popmart_set)
@@ -43,33 +43,33 @@ class PopTrackLogic
         @sets[set_name].add_figure(popmart_figure)
     end
 	
-	# Needs to be given the name and brand of a set. Checks to see if it
-	# exists in @sets. If it does, return it, if not raise an error.
-	def get_set(brand_name, series_name)
-		key = generate_dict_key(brand_name, series_name)
-		if @sets.has_key?(key)
-			return @sets[key]
-		else
-			raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
-		end
-	end
+    # Needs to be given the name and brand of a set. Checks to see if it
+    # exists in @sets. If it does, return it, if not raise an error.
+    def get_set(brand_name, series_name)
+        key = generate_dict_key(brand_name, series_name)
+        if @sets.has_key?(key)
+            return @sets[key]
+        else
+            raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
+        end
+    end
 
 end
 
 # Notes:
-	# Need to connect this to popmart_database.rb
-	# - Save all the sets that get added to @sets
-	# - Then at end of program, save them all to the database, should
-	#	hopefully be more efficient in terms of file read/write time
-	# - Or, save them all when the user specifies that they want to
-	#	save things. More responsibility for the user, but less work
-	#	for me (LMAO)
-	# - Only really call the database when the user needs to get a set
-	#	that is not already in @sets
-	# - Only other question is how do I test all of this functionality?
-	# - Probably gonna be a hassle regardless (ugh)
+    # Need to connect this to popmart_database.rb
+    # - Save all the sets that get added to @sets
+    # - Then at end of program, save them all to the database, should
+    #	hopefully be more efficient in terms of file read/write time
+    # - Or, save them all when the user specifies that they want to
+    #	save things. More responsibility for the user, but less work
+    #	for me (LMAO)
+    # - Only really call the database when the user needs to get a set
+    #	that is not already in @sets
+    # - Only other question is how do I test all of this functionality?
+    # - Probably gonna be a hassle regardless (ugh)
 
-	# Need to develop a UI for this program
-	# - Maybe jump straight into Tkinter? Not sure if that's wise
-	# - Probably best if i got all of the the kinks worked out in
-	#	this class first before I even do any of that. 
+    # Need to develop a UI for this program
+    # - Maybe jump straight into Tkinter? Not sure if that's wise
+    # - Probably best if i got all of the the kinks worked out in
+    #	this class first before I even do any of that. 
