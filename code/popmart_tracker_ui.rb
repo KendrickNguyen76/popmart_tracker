@@ -8,39 +8,39 @@ require_relative "popmart_tracker_logic.rb"
 
 
 class PopTrackUI
-	# PopTrackUI is a class that will be used for handling the UI portion
-	# of the Popmart Tracker application. This includes tasks such as: 
-	# collecting user inputs and displaying results.
-	
-	# @tracker - PopTrackLogic object, handles backend side of the program
-	# @running - Boolean, determines whether or not the program is still active
+    # PopTrackUI is a class that will be used for handling the UI portion
+    # of the Popmart Tracker application. This includes tasks such as: 
+    # collecting user inputs and displaying results.
+
+    # @tracker - PopTrackLogic object, handles backend side of the program
+    # @running - Boolean, determines whether or not the program is still active
     # VALID_COMMAND_HASH - Hash containing the commands that the user is allowed to do
+
+    HELP_FILE = "code/docs/help.txt" 
+
+    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true}
+    VALID_COMMAND_HASH.default = false	
+
+
+    # Constructor for a PopTrackUI object
+    def initialize
+        @tracker = PopTrackLogic.new
+        @running = true
+        print_start_up()
+        run_tracker()
+    end
 	
-	HELP_FILE = "code/docs/help.txt" 
+    # Prints the start up message for a popmart tracker program
+    def print_start_up
+        puts "Welcome to the Popmart Tracker!"
+        puts "Please type in \"HELP\" if you need assistance"
+        puts
+    end
 
-	VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true}
-	VALID_COMMAND_HASH.default = false	
-
-
-	# Constructor for a PopTrackUI object
-	def initialize
-		@tracker = PopTrackLogic.new
-		@running = true
-		print_start_up()
-		run_tracker()
-	end
-	
-	# Prints the start up message for a popmart tracker program
-	def print_start_up
-		puts "Welcome to the Popmart Tracker!"
-		puts "Please type in \"HELP\" if you need assistance"
-		puts
-	end
-
-	# Prints out a header that includes the text provided
-	def print_header(text)
-		puts "\n=====#{text}====="
-	end
+    # Prints out a header that includes the text provided
+    def print_header(text)
+        puts "\n=====#{text}====="
+    end
 	
 	# Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
     def is_valid_command?(user_comm)
