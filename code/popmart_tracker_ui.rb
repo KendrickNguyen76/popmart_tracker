@@ -267,27 +267,42 @@ class PopTrackUI
     end
 	
     # Executes the "MARK FIGURE" command
-    def mark_figure
-        print_header("MARK FIGURE")
-        
+    def mark_figure 
         while true
+            print_header("MARK FIGURE")
             existing_set = prompt_for_set_name
             existing_figure = prompt_for_figure_name
             
-            #if can_mark_figure?(existing_set, existing_figure)
-                #puts "#{existing_figure} marked as collected in set #{existing_set}"
-                #break 
-            #end
+            if can_mark_figure?(existing_set, existing_figure)
+                puts "#{existing_figure} marked as collected"
+                puts
+                break 
+            end
+
+            puts
         end 
     end
 	
     # Prompts user for the name of the figure they want to edit
     # Returns whatever the user inputs
     def prompt_for_figure_name
-        print "Enter figure name: "
+        print "\nEnter figure name: "
         figure_name = gets.chomp
 
         return figure_name
+    end
+    
+    # Takes in a set and a figure's name. Marks the figure within the set
+    # as collected and returns true. If the figure does not exist in 
+    # the set, print an error message and return false.
+    def can_mark_figure?(set, figure_name)
+        begin
+           set.mark_figure_as_collected(figure_name)
+           return true
+        rescue => error
+            puts error.message
+            return false
+        end
     end
 
 end
