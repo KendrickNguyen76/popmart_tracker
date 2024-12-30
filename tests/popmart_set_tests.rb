@@ -29,28 +29,28 @@ class TestPopMartFigure < Test::Unit::TestCase
         assert_equal(test_figure.is_secret, true)
     end
 
-	# Tests == operator correctly returns true
-	def test_equality_operator_returns_true
-		test_figure = PopMartFigure.new("test", Float(1/8), false, true)
-		test_figure2 = PopMartFigure.new("test", Float(1/8), false, true)
+    # Tests == operator correctly returns true
+    def test_equality_operator_returns_true
+        test_figure = PopMartFigure.new("test", Float(1/8), false, true)
+        test_figure2 = PopMartFigure.new("test", Float(1/8), false, true)
 
-		assert_true(test_figure == test_figure2)
-	end
+        assert_true(test_figure == test_figure2)
+    end
 
-	# Tests == operator correctly returns false
-	def test_equality_operator_returns_false
-		test_figure = PopMartFigure.new("test", 1/8, false, true)
-		test_figure2 = PopMartFigure.new("test2", 1/8, false, true)
-		test_figure3 = PopMartFigure.new("test", 0.25, false, true)
-		test_figure4 = PopMartFigure.new("test", 1/8, true, true)
-		test_figure5 = PopMartFigure.new("test", 1/8, false, false)
+    # Tests == operator correctly returns false
+    def test_equality_operator_returns_false
+        test_figure = PopMartFigure.new("test", 1/8, false, true)
+        test_figure2 = PopMartFigure.new("test2", 1/8, false, true)
+        test_figure3 = PopMartFigure.new("test", 0.25, false, true)
+        test_figure4 = PopMartFigure.new("test", 1/8, true, true)
+        test_figure5 = PopMartFigure.new("test", 1/8, false, false)
 
-		assert_false(test_figure == test_figure2)
-		assert_false(test_figure == test_figure3)
-		assert_false(test_figure == test_figure4)
-		assert_false(test_figure == test_figure5)
-		assert_false(test_figure == "Hello")
-	end
+        assert_false(test_figure == test_figure2)
+        assert_false(test_figure == test_figure3)
+        assert_false(test_figure == test_figure4)
+        assert_false(test_figure == test_figure5)
+        assert_false(test_figure == "Hello")
+    end
 end
 
 
@@ -111,15 +111,15 @@ class TestPopMartSet < Test::Unit::TestCase
         assert_equal(test_set.num_of_figures, 1)
     end
 	
-	# Tests that adding a duplicate figure raises an exception
-	def test_adding_figures_raises_exception_when_figure_already_exists
-		test_set = PopMartSet.new("test", "test")
+    # Tests that adding a duplicate figure raises an exception
+    def test_adding_figures_raises_exception_when_figure_already_exists
+        test_set = PopMartSet.new("test", "test")
         test_set.add_figure(PopMartFigure.new("Foo", 3/5, false))
 
-		assert_raise_message("Figure Foo already exists in test test") {
-			test_set.add_figure(PopMartFigure.new("Foo", 3/5, false))
-		}
-	end
+        assert_raise_message("Figure Foo already exists in test test") {
+            test_set.add_figure(PopMartFigure.new("Foo", 3/5, false))
+        }
+    end
 
     # Tests finding figures in a PopMartSet
     def test_finding_figures
@@ -152,7 +152,7 @@ class TestPopMartSet < Test::Unit::TestCase
     end
 
     # Tests changing figure's collected status using PopMartSet
-    def test_mark_figure_as_collected_changes_collected_status
+    def test_mark_figure_as_collected_changes_collected_status 
         test_set = PopMartSet.new("test", "test")
         test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
 
@@ -165,31 +165,31 @@ class TestPopMartSet < Test::Unit::TestCase
     def test_mark_figure_as_collected_throws_exception_when_figure_is_nonexistent
         test_set = PopMartSet.new("test", "test")
         
-        assert_raise_message("Figure Bar does not exist within test test") {
+        assert_raise_message("Figure Bar does not exist within test test, cannot mark it as collected") {
 			test_set.mark_figure_as_collected("Bar")
 		}
     end
 	
-	# Tests that delete_figure correctly deletes the specified figure
-	def test_delete_figure_deletes_correct_figure
-		test_set = PopMartSet.new("test", "test")
-		test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
-		test_set.add_figure(PopMartFigure.new("Bar", 1/6, true))
+    # Tests that delete_figure correctly deletes the specified figure
+    def test_delete_figure_deletes_correct_figure
+    test_set = PopMartSet.new("test", "test")
+        test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
+        test_set.add_figure(PopMartFigure.new("Bar", 1/6, true))
 
-		assert_equal(test_set.num_of_figures, 2)
+        assert_equal(test_set.num_of_figures, 2)
 
-		test_set.delete_figure("Foo")
+        test_set.delete_figure("Foo")
 
-		assert_equal(test_set.num_of_figures, 1)
-		assert_true(test_set.find_figure("Foo").nil?)
-	end
+        assert_equal(test_set.num_of_figures, 1)
+        assert_true(test_set.find_figure("Foo").nil?)
+    end
 
-	# Tests that delete_figure does throw exception	
-	def test_delete_figure_raises_error_if_figure_nonexistant
-		test_set = PopMartSet.new("test", "test")
+    # Tests that delete_figure does throw exception	
+    def test_delete_figure_raises_error_if_figure_nonexistant
+        test_set = PopMartSet.new("test", "test")
 
-		assert_raise("Figure Bar does not exist in test test") {
-			test_set.delete_figure("Bar")
-		}
-	end
+        assert_raise("Figure Bar does not exist in test test") {
+            test_set.delete_figure("Bar")
+        }
+    end
 end

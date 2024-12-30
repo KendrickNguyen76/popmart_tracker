@@ -34,12 +34,16 @@ class TestPopMartDatabse < Test::Unit::TestCase
     def test_adding_duplicate_set
         @test_handler.add_set_to_database("Foo", "Bar", 0.0)
 
-        assert_raise_message("Set Foo Bar already exists") {@test_handler.add_set_to_database("Foo", "Bar", 0.0)}
+        assert_raise_message("Set Foo Bar already exists") {
+            @test_handler.add_set_to_database("Foo", "Bar", 0.0)
+        }
     end
 
     # Tests searching for a non-existent set in the database, should throw error
     def test_searching_for_nonexistent_set
-        assert_raise_message("Set Does Not Exist does not exist in database") {@test_handler.get_set_information("Does Not", "Exist")}
+        assert_raise_message("Set Does Not Exist does not exist in database") {
+            @test_handler.get_set_information("Does Not", "Exist")
+        }
     end
 
     # Tests deleting a specific row from the popmart_sets table
@@ -50,12 +54,16 @@ class TestPopMartDatabse < Test::Unit::TestCase
         @test_handler.delete_specific_set("Foo", "Bar")
 
         assert_equal(@test_handler.get_set_information("Book", "Store"), ["Book", "Store", 17.76])
-        assert_raise_message("Set Foo Bar does not exist in database") {@test_handler.get_set_information("Foo", "Bar")}
+        assert_raise_message("Set Foo Bar does not exist in database") {
+            @test_handler.get_set_information("Foo", "Bar")
+        }
     end
 
     # Tests deleting nonexistent set from the database
     def test_deleting_nonexistant_set_raises_error
-        assert_raise_message("Set Foo Bar does not exist in database") {@test_handler.delete_specific_set("Foo", "Bar")}
+        assert_raise_message("Set Foo Bar does not exist in database") {
+            @test_handler.delete_specific_set("Foo", "Bar")
+        }
     end
 
     # When tests end, drop all tables in the test database and close the connection
