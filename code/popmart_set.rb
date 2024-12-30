@@ -114,14 +114,10 @@ class PopMartSet
     def mark_figure_as_collected(f_name)
         collected_figure = find_figure(f_name)
 
-        case collected_figure.nil?
-        when false
-            # For testing --> Print out name of figure being found & figure object itself
-            # puts f_name
-            # puts collected_figure
+        if !(collected_figure.nil?)
             collected_figure.is_collected = true
         else 
-            raise StandardError.new "Figure #{f_name} does not exist within #{@brand} #{@series_name}"
+            raise StandardError.new "Figure #{f_name} does not exist within #{@brand} #{@series_name}, cannot mark it as collected"
         end
     end
 	
