@@ -192,4 +192,11 @@ class TestPopMartSet < Test::Unit::TestCase
             test_set.delete_figure("Bar")
         }
     end
+
+    def test_to_s_returns_correct_string
+        test_set = PopMartSet.new("test", "test")
+
+        assert_equal(test_set.to_s, "test test : 0 figures, 0.0 dollars")
+    end
+
 end

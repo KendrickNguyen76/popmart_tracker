@@ -71,7 +71,11 @@ class PopMartSet
     def num_of_figures
         return @figures.size
     end
-	
+   
+    def to_s
+        return "#{@brand} #{@series_name} : #{self.num_of_figures} figures, #{@price} dollars"
+    end
+
     # Requires a PopMartFigure object. Adds it to the @figures array
     def add_figure(figure)
         figure_check = find_figure(figure.name)

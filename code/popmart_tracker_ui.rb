@@ -18,7 +18,7 @@ class PopTrackUI
 
     HELP_FILE = "code/docs/help.txt" 
 
-    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true}
+    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true}
     VALID_COMMAND_HASH.default = false	
 
 
@@ -75,7 +75,7 @@ class PopTrackUI
         when "ADD SET"
             new_set = get_new_set_info
             @tracker.add_set(new_set);
-            puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
+            puts "\nSet #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
             puts
         when "HELP"
             print_help_file()
@@ -83,6 +83,8 @@ class PopTrackUI
             add_figure()
         when "MARK FIGURE"
             mark_figure()
+        when "VIEW SET"
+            view_set()
         end
     end
 	
@@ -303,6 +305,12 @@ class PopTrackUI
             puts error.message
             return false
         end
+    end
+    
+    def view_set
+        print_header("VIEW SET")
+        existing_set = prompt_for_set_name
+        print "\n#{existing_set}\n\n"
     end
 
 end
