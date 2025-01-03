@@ -167,13 +167,13 @@ class TestPopMartSet < Test::Unit::TestCase
         test_set = PopMartSet.new("test", "test")
         
         assert_raise_message("Figure Bar does not exist within test test, cannot mark it as collected") {
-			test_set.mark_figure_as_collected("Bar")
-		}
+            test_set.mark_figure_as_collected("Bar")
+        }
     end
 	
     # Tests that delete_figure correctly deletes the specified figure
     def test_delete_figure_deletes_correct_figure
-    test_set = PopMartSet.new("test", "test")
+        test_set = PopMartSet.new("test", "test")
         test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
         test_set.add_figure(PopMartFigure.new("Bar", 1/6, true))
 
@@ -201,9 +201,13 @@ class TestPopMartSet < Test::Unit::TestCase
         assert_equal(test_set.to_s, "test test : 0 figures, 0.0 dollars")
     end
     
+    # Tests that print_figure_names prints "No figures" 
+    # when there are no figures in the set
     def test_print_figure_names_prints_message_when_no_figures_are_present
         test_set = PopMartSet.new("test", "test")
-
+        
+        # All this does is set the standard output
+        # to a string buffer that I can use for testing
         test_output = StringIO.new
         original_stdout = $stdout
         $stdout = test_output
@@ -211,6 +215,25 @@ class TestPopMartSet < Test::Unit::TestCase
         test_set.print_figure_names
 
         assert_equal(test_output.string, "No figures\n")
+
+        $stdout = original_stdout
+    end
+    
+    # Tests that print_figure_names functions properly when there are multiple
+    # figures in a set
+    def test_print_figure_names_prints_out_name_of_each_figure
+        test_set = PopMartSet.new("test", "test") 
+        test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
+        test_set.add_figure(PopMartFigure.new("Bar", 1/6, true))
+
+        # Set standard output to string buffer
+        test_output = StringIO.new
+        original_stdout = $stdout
+        $stdout = test_output
+
+        test_set.print_figure_names
+
+        assert_equal(test_output.string, "Foo\nBar\n")
 
         $stdout = original_stdout
     end
