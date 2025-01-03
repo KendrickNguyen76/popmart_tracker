@@ -71,9 +71,19 @@ class PopMartSet
     def num_of_figures
         return @figures.size
     end
-   
+
+    # Returns the string representation of a PopMartSet object
     def to_s
         return "#{@brand} #{@series_name} : #{self.num_of_figures} figures, #{@price} dollars"
+    end
+    
+    # Print out the names of all figures in the set
+    def print_figure_names
+        if num_of_figures > 0
+            figures.each { |figure| puts figure.name }
+        else
+            puts "No figures"
+        end
     end
 
     # Requires a PopMartFigure object. Adds it to the @figures array

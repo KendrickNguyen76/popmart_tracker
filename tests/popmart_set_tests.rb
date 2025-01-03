@@ -7,6 +7,7 @@
 # Require Statements
 require_relative "../code/popmart_set.rb"
 require "test/unit"
+require "stringio"
 
 class TestPopMartFigure < Test::Unit::TestCase
     # TestPopMartFigure contains the test cases for the PopMartFigure class
@@ -192,11 +193,26 @@ class TestPopMartSet < Test::Unit::TestCase
             test_set.delete_figure("Bar")
         }
     end
-
+    
+    # Tests that to_s method returns a correct string representation
     def test_to_s_returns_correct_string
         test_set = PopMartSet.new("test", "test")
 
         assert_equal(test_set.to_s, "test test : 0 figures, 0.0 dollars")
+    end
+    
+    def test_print_figure_names_prints_message_when_no_figures_are_present
+        test_set = PopMartSet.new("test", "test")
+
+        test_output = StringIO.new
+        original_stdout = $stdout
+        $stdout = test_output
+
+        test_set.print_figure_names
+
+        assert_equal(test_output.string, "No figures\n")
+
+        $stdout = original_stdout
     end
 
 end

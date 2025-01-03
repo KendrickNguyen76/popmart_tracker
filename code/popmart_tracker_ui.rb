@@ -307,6 +307,7 @@ class PopTrackUI
         end
     end
     
+    # Print out the information of a specific set
     def view_set
         print_header("VIEW SET")
         existing_set = prompt_for_set_name
