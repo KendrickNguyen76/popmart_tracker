@@ -196,7 +196,7 @@ class PopTrackUI
         figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
         figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
 
-        print "Figure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
+        print "\nFigure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
         return PopMartFigure.new(figure_name, figure_probability, figure_is_collected, figure_is_secret)
     end
 	
@@ -311,7 +311,9 @@ class PopTrackUI
     def view_set
         print_header("VIEW SET")
         existing_set = prompt_for_set_name
-        print "\n#{existing_set}\n\n"
+        print "\n#{existing_set}\nFigures:\n"
+        existing_set.print_figure_names
+        puts
     end
 
 end
