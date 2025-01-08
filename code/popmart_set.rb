@@ -33,6 +33,16 @@ class PopMartFigure
         self.is_collected == other.is_collected &&
         self.is_secret == other.is_secret)
 	end
+    
+    # Returns a string representation of a PopMartFigure
+    def to_s
+        str_rep = "#{@name}"
+        str_rep += "\nProbability: #{@probability}"
+        str_rep += "\nCollected: #{@is_collected}\nSecret: #{@is_secret}"
+        
+        return str_rep
+    end
+
 end
 
 

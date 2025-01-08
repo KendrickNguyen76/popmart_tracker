@@ -52,6 +52,14 @@ class TestPopMartFigure < Test::Unit::TestCase
         assert_false(test_figure == test_figure5)
         assert_false(test_figure == "Hello")
     end
+
+    def test_figure_to_s_returns_proper_result
+        test_figure = PopMartFigure.new("test", 1/8, false, true)
+        test_str = test_figure.to_s
+        correct_result = "test\nProbability: 0.0\nCollected: false\nSecret: true"
+
+        assert_equal(test_str, correct_result)
+    end
 end
 
 
