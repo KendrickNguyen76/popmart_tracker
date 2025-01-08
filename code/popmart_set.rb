@@ -36,8 +36,7 @@ class PopMartFigure
     
     # Returns a string representation of a PopMartFigure
     def to_s
-        str_rep = "#{@name}"
-        str_rep += "\nProbability: #{@probability}"
+        str_rep = "Name: #{@name}\nProbability: #{@probability}"
         str_rep += "\nCollected: #{@is_collected}\nSecret: #{@is_secret}"
         
         return str_rep

@@ -13,3 +13,4 @@ VIEW SET - View a set's information (name, price, figure names)
 Figure Commands:
 ADD FIGURE - Add a figure to a Popmart set
 MARK FIGURE - Mark a figure as collected
+VIEW FIGURE - View a figure's information (name, probability, etc.)
