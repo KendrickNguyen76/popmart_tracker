@@ -1,4 +1,9 @@
+# Misc files
 .DS_Store
+
+# Test files
 tests/test.db
+
+# Bash files
 setup.sh
 teardown.sh

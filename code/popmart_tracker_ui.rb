@@ -18,7 +18,7 @@ class PopTrackUI
 
     HELP_FILE = "code/docs/help.txt" 
 
-    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true}
+    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true}
     VALID_COMMAND_HASH.default = false	
 
 
@@ -85,6 +85,8 @@ class PopTrackUI
             mark_figure()
         when "VIEW SET"
             view_set()
+        when "VIEW FIGURE"
+            view_figure()
         end
     end
 	
@@ -314,6 +316,31 @@ class PopTrackUI
         print "\n#{existing_set}\nFigures:\n"
         existing_set.print_figure_names
         puts
+    end
+    
+    def view_figure
+        while true
+            print_header("VIEW FIGURE")
+            existing_set = prompt_for_set_name
+            existing_figure = prompt_for_figure_name
+
+            if can_print_figure?(existing_set, existing_figure)
+                puts
+                break
+            end
+        end 
+    end
+
+    def can_print_figure?(set, figure_name)
+        found_figure = set.find_figure(figure_name)
+
+        if !(found_figure.nil?)
+            puts "\n#{found_figure}"
+            return true
+        else
+            puts "\n#{figure_name} not found!"
+            return false
+        end
     end
 
 end
