@@ -18,7 +18,7 @@ class PopTrackUI
 
     HELP_FILE = "code/docs/help.txt" 
 
-    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true}
+    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, "DELETE FIGURE" => true}
     VALID_COMMAND_HASH.default = false	
 
 
@@ -84,6 +84,8 @@ class PopTrackUI
             view_set()
         when "VIEW FIGURE"
             view_figure()
+        when "DELETE FIGURE"
+            delete_figure()
         end
     end
     
@@ -351,5 +353,36 @@ class PopTrackUI
             return false
         end
     end
+    
+    # Executes the DELETE FIGURE command
+    def delete_figure
+        print_header("DELETE FIGURE")
 
+        existing_set = prompt_for_set_name
+        existing_set_key = @tracker.generate_dict_key(existing_set.brand, existing_set.series_name)
+        existing_figure = prompt_for_figure_name
+        
+        confirmation = get_yes_or_no_answer("Are you sure you want to delete #{existing_figure} from set #{existing_set.brand} #{existing_set.series_name}")
+
+        if confirmation
+            puts "\nDeleting figure.."
+            can_delete_figure?(existing_set_key, existing_figure)
+        else
+            puts "\nCancelling Delete Operation"
+        end
+
+        puts
+    end
+    
+    # Needs to be given a set key and the name of a PopMartFigure object.
+    # Checks to see if the figure can be deleted. If it can be, execute
+    # the deletion and return true. If not, return false.
+    def can_delete_figure?(set_key, figure_name)
+        begin
+           @tracker.delete_figure_in_specified_set(set_key, figure_name)
+           puts "Completed Delete!"
+        rescue => error
+            puts error.message
+        end
+    end
 end
