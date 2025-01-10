@@ -33,6 +33,15 @@ class PopMartFigure
         self.is_collected == other.is_collected &&
         self.is_secret == other.is_secret)
 	end
+    
+    # Returns a string representation of a PopMartFigure
+    def to_s
+        str_rep = "Name: #{@name}\nProbability: #{@probability}"
+        str_rep += "\nCollected: #{@is_collected}\nSecret: #{@is_secret}"
+        
+        return str_rep
+    end
+
 end
 
 
@@ -71,7 +80,23 @@ class PopMartSet
     def num_of_figures
         return @figures.size
     end
-	
+
+    # Returns the string representation of a PopMartSet object
+    def to_s
+        str_rep = "Brand: #{@brand}\nSeries: #{@series_name}\n"
+        str_rep += "Number of Figures: #{self.num_of_figures}\nPrice: #{@price} dollars"
+        return str_rep
+    end
+    
+    # Print out the names of all figures in the set
+    def print_figure_names
+        if num_of_figures > 0
+            figures.each { |figure| puts figure.name }
+        else
+            puts "No figures"
+        end
+    end
+
     # Requires a PopMartFigure object. Adds it to the @figures array
     def add_figure(figure)
         figure_check = find_figure(figure.name)

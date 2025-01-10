@@ -18,7 +18,7 @@ class PopTrackUI
 
     HELP_FILE = "code/docs/help.txt" 
 
-    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true}
+    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, "DELETE FIGURE" => true}
     VALID_COMMAND_HASH.default = false	
 
 
@@ -73,17 +73,28 @@ class PopTrackUI
             @running = false
             puts "\nExited Popmart Tracker"
         when "ADD SET"
-            new_set = get_new_set_info
-            @tracker.add_set(new_set);
-            puts "Set #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
-            puts
+            add_set()
         when "HELP"
             print_help_file()
         when "ADD FIGURE"
             add_figure()
         when "MARK FIGURE"
             mark_figure()
+        when "VIEW SET"
+            view_set()
+        when "VIEW FIGURE"
+            view_figure()
+        when "DELETE FIGURE"
+            delete_figure()
         end
+    end
+    
+    # Handles ADD SET command
+    def add_set 
+        new_set = get_new_set_info
+        @tracker.add_set(new_set);
+        puts "\nSet #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
+        puts
     end
 	
     # Gets information about the set the user wants to add.
@@ -194,7 +205,7 @@ class PopTrackUI
         figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
         figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
 
-        print "Figure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
+        print "\nFigure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
         return PopMartFigure.new(figure_name, figure_probability, figure_is_collected, figure_is_secret)
     end
 	
@@ -272,8 +283,9 @@ class PopTrackUI
             print_header("MARK FIGURE")
             existing_set = prompt_for_set_name
             existing_figure = prompt_for_figure_name
+            existing_set_key = @tracker.generate_dict_key(existing_set.brand, existing_set.series_name)
             
-            if can_mark_figure?(existing_set, existing_figure)
+            if can_mark_figure?(existing_set_key, existing_figure)
                 puts "#{existing_figure} marked as collected"
                 puts
                 break 
@@ -295,14 +307,82 @@ class PopTrackUI
     # Takes in a set and a figure's name. Marks the figure within the set
     # as collected and returns true. If the figure does not exist in 
     # the set, print an error message and return false.
-    def can_mark_figure?(set, figure_name)
+    def can_mark_figure?(set_key, figure_name)
         begin
-           set.mark_figure_as_collected(figure_name)
+           @tracker.mark_figure_in_specified_set(set_key, figure_name)
            return true
         rescue => error
             puts error.message
             return false
         end
     end
+    
+    # Print out the information of a specific set
+    def view_set
+        print_header("VIEW SET")
+        existing_set = prompt_for_set_name
+        print "\n#{existing_set}\n\nFigures:\n"
+        existing_set.print_figure_names
+        puts
+    end
+    
+    # Print out the information of a specific figure
+    def view_figure
+        while true
+            print_header("VIEW FIGURE")
+            existing_set = prompt_for_set_name
+            existing_figure = prompt_for_figure_name
 
+            if can_print_figure?(existing_set, existing_figure)
+                puts
+                break
+            end
+        end 
+    end
+    
+    # Checks to see if the figure exists. If it does, print it and
+    # return true. Else, print an error message and print false
+    def can_print_figure?(set, figure_name)
+        found_figure = set.find_figure(figure_name)
+
+        if !(found_figure.nil?)
+            puts "\n#{found_figure}"
+            return true
+        else
+            puts "\n#{figure_name} not found!"
+            return false
+        end
+    end
+    
+    # Executes the DELETE FIGURE command
+    def delete_figure
+        print_header("DELETE FIGURE")
+
+        existing_set = prompt_for_set_name
+        existing_set_key = @tracker.generate_dict_key(existing_set.brand, existing_set.series_name)
+        existing_figure = prompt_for_figure_name
+        
+        confirmation = get_yes_or_no_answer("Are you sure you want to delete #{existing_figure} from set #{existing_set.brand} #{existing_set.series_name}")
+
+        if confirmation
+            puts "\nDeleting figure.."
+            can_delete_figure?(existing_set_key, existing_figure)
+        else
+            puts "\nCancelling Delete Operation"
+        end
+
+        puts
+    end
+    
+    # Needs to be given a set key and the name of a PopMartFigure object.
+    # Checks to see if the figure can be deleted. If it can be, execute
+    # the deletion and return true. If not, return false.
+    def can_delete_figure?(set_key, figure_name)
+        begin
+           @tracker.delete_figure_in_specified_set(set_key, figure_name)
+           puts "Completed Delete!"
+        rescue => error
+            puts error.message
+        end
+    end
 end

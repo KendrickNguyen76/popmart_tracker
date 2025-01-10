@@ -7,6 +7,7 @@
 # Require Statements
 require_relative "../code/popmart_set.rb"
 require "test/unit"
+require "stringio"
 
 class TestPopMartFigure < Test::Unit::TestCase
     # TestPopMartFigure contains the test cases for the PopMartFigure class
@@ -50,6 +51,14 @@ class TestPopMartFigure < Test::Unit::TestCase
         assert_false(test_figure == test_figure4)
         assert_false(test_figure == test_figure5)
         assert_false(test_figure == "Hello")
+    end
+
+    def test_figure_to_s_returns_proper_result
+        test_figure = PopMartFigure.new("test", 1/8, false, true)
+        test_str = test_figure.to_s
+        correct_result = "Name: test\nProbability: 0.0\nCollected: false\nSecret: true"
+
+        assert_equal(test_str, correct_result)
     end
 end
 
@@ -166,13 +175,13 @@ class TestPopMartSet < Test::Unit::TestCase
         test_set = PopMartSet.new("test", "test")
         
         assert_raise_message("Figure Bar does not exist within test test, cannot mark it as collected") {
-			test_set.mark_figure_as_collected("Bar")
-		}
+            test_set.mark_figure_as_collected("Bar")
+        }
     end
 	
     # Tests that delete_figure correctly deletes the specified figure
     def test_delete_figure_deletes_correct_figure
-    test_set = PopMartSet.new("test", "test")
+        test_set = PopMartSet.new("test", "test")
         test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
         test_set.add_figure(PopMartFigure.new("Bar", 1/6, true))
 
@@ -192,4 +201,50 @@ class TestPopMartSet < Test::Unit::TestCase
             test_set.delete_figure("Bar")
         }
     end
+    
+    # Tests that to_s method returns a correct string representation
+    def test_to_s_returns_correct_string
+        test_set = PopMartSet.new("test", "test")
+        correct_result = "Brand: test\nSeries: test\nNumber of Figures: 0\nPrice: 0.0 dollars"
+
+        assert_equal(test_set.to_s, correct_result)
+    end
+    
+    # Tests that print_figure_names prints "No figures" 
+    # when there are no figures in the set
+    def test_print_figure_names_prints_message_when_no_figures_are_present
+        test_set = PopMartSet.new("test", "test")
+        
+        # All this does is set the standard output
+        # to a string buffer that I can use for testing
+        test_output = StringIO.new
+        original_stdout = $stdout
+        $stdout = test_output
+
+        test_set.print_figure_names
+
+        assert_equal(test_output.string, "No figures\n")
+
+        $stdout = original_stdout
+    end
+    
+    # Tests that print_figure_names functions properly when there are multiple
+    # figures in a set
+    def test_print_figure_names_prints_out_name_of_each_figure
+        test_set = PopMartSet.new("test", "test") 
+        test_set.add_figure(PopMartFigure.new("Foo", 1/6, false))
+        test_set.add_figure(PopMartFigure.new("Bar", 1/6, true))
+
+        # Set standard output to string buffer
+        test_output = StringIO.new
+        original_stdout = $stdout
+        $stdout = test_output
+
+        test_set.print_figure_names
+
+        assert_equal(test_output.string, "Foo\nBar\n")
+
+        $stdout = original_stdout
+    end
+
 end

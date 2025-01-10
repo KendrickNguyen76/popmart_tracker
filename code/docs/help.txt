@@ -1,8 +1,16 @@
 =====HELP PAGE=====
 Here are a list of commands you can run:
+**These are all Case Insensitive**
 
+Basic Commands:
 HELP - Display the help page
+QUIT - Exit the program
+
+Set Commands:
 ADD SET - Add a Popmart set
+VIEW SET - View a set's information (name, price, figure names)
+
+Figure Commands:
 ADD FIGURE - Add a figure to a Popmart set
 MARK FIGURE - Mark a figure as collected
-QUIT - Exit the program
+VIEW FIGURE - View a figure's information (name, probability, etc.)
