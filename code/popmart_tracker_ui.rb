@@ -281,8 +281,9 @@ class PopTrackUI
             print_header("MARK FIGURE")
             existing_set = prompt_for_set_name
             existing_figure = prompt_for_figure_name
+            existing_set_key = @tracker.generate_dict_key(existing_set.brand, existing_set.series_name)
             
-            if can_mark_figure?(existing_set, existing_figure)
+            if can_mark_figure?(existing_set_key, existing_figure)
                 puts "#{existing_figure} marked as collected"
                 puts
                 break 
@@ -304,9 +305,9 @@ class PopTrackUI
     # Takes in a set and a figure's name. Marks the figure within the set
     # as collected and returns true. If the figure does not exist in 
     # the set, print an error message and return false.
-    def can_mark_figure?(set, figure_name)
+    def can_mark_figure?(set_key, figure_name)
         begin
-           set.mark_figure_as_collected(figure_name)
+           @tracker.mark_figure_in_specified_set(set_key, figure_name)
            return true
         rescue => error
             puts error.message
