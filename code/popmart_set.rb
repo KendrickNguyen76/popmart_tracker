@@ -83,7 +83,9 @@ class PopMartSet
 
     # Returns the string representation of a PopMartSet object
     def to_s
-        return "#{@brand} #{@series_name} : #{self.num_of_figures} figures, #{@price} dollars"
+        str_rep = "Brand: #{@brand}\nSeries: #{@series_name}\n"
+        str_rep += "Number of Figures: #{self.num_of_figures}\nPrice: #{@price} dollars"
+        return str_rep
     end
     
     # Print out the names of all figures in the set

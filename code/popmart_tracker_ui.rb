@@ -319,7 +319,7 @@ class PopTrackUI
     def view_set
         print_header("VIEW SET")
         existing_set = prompt_for_set_name
-        print "\n#{existing_set}\nFigures:\n"
+        print "\n#{existing_set}\n\nFigures:\n"
         existing_set.print_figure_names
         puts
     end

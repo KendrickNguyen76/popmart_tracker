@@ -205,8 +205,9 @@ class TestPopMartSet < Test::Unit::TestCase
     # Tests that to_s method returns a correct string representation
     def test_to_s_returns_correct_string
         test_set = PopMartSet.new("test", "test")
+        correct_result = "Brand: test\nSeries: test\nNumber of Figures: 0\nPrice: 0.0 dollars"
 
-        assert_equal(test_set.to_s, "test test : 0 figures, 0.0 dollars")
+        assert_equal(test_set.to_s, correct_result)
     end
     
     # Tests that print_figure_names prints "No figures" 
