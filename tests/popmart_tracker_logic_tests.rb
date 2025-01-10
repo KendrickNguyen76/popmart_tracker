@@ -81,5 +81,16 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_true(find_result.is_collected)
     end
 
+    def test_delete_figure_in_specified_set_correctly_deletes_figure 
+        test_figure = PopMartFigure.new("name", 1/2, false)
+
+        @test_tracker.add_set(@test_set)
+        @test_tracker.add_to_specific_set("BRAND_SERIES NAME", test_figure)
+        @test_tracker.delete_figure_in_specified_set("BRAND_SERIES NAME", test_figure.name)
+        find_result = @test_tracker.sets["BRAND_SERIES NAME"].find_figure(test_figure.name)
+
+        assert_nil(find_result)
+    end
+
 end
 
