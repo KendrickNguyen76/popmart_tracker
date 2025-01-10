@@ -38,8 +38,8 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].price, 0.0)
     end
 	
-    # Tests that add_to_specific_set() allows you to add a figure to
-    # a specific set
+    # Tests that add_to_specific_set() allows you to 
+    # add a figure to a specific set
     def test_can_add_pop_mart_figure_to_specific_set
         test_figure = PopMartFigure.new("name", 1/2, true)
 
@@ -67,5 +67,19 @@ class TestPopTrackLogic < Test::Unit::TestCase
             @test_tracker.get_set("Doesnt", "Exist")
         }
     end
+    
+    # Tests that mark_figure_in_specified_set correctly marks 
+    # the specified figure as collected.
+    def test_mark_figure_in_specified_set_marks_figure_as_collected 
+        test_figure = PopMartFigure.new("name", 1/2, false)
+
+        @test_tracker.add_set(@test_set)
+        @test_tracker.add_to_specific_set("BRAND_SERIES NAME", test_figure)
+        @test_tracker.mark_figure_in_specified_set("BRAND_SERIES NAME", test_figure.name)
+        find_result = @test_tracker.sets["BRAND_SERIES NAME"].find_figure(test_figure.name)
+
+        assert_true(find_result.is_collected)
+    end
+
 end
 

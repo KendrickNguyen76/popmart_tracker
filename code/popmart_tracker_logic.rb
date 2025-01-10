@@ -42,6 +42,12 @@ class PopTrackLogic
     def add_to_specific_set(set_name, popmart_figure)
         @sets[set_name].add_figure(popmart_figure)
     end
+    
+    # Needs to be given the name of a PopMart set andn a PopMartFigure object.
+    # Marks the figure within the specified set as collected
+    def mark_figure_in_specified_set(set_name, figure_name)
+        @sets[set_name].mark_figure_as_collected(figure_name)
+    end
 	
     # Needs to be given the name and brand of a set. Checks to see if it
     # exists in @sets. If it does, return it, if not raise an error.

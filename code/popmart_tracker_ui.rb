@@ -73,10 +73,7 @@ class PopTrackUI
             @running = false
             puts "\nExited Popmart Tracker"
         when "ADD SET"
-            new_set = get_new_set_info
-            @tracker.add_set(new_set);
-            puts "\nSet #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
-            puts
+            add_set()
         when "HELP"
             print_help_file()
         when "ADD FIGURE"
@@ -88,6 +85,14 @@ class PopTrackUI
         when "VIEW FIGURE"
             view_figure()
         end
+    end
+    
+    # Handles ADD SET command
+    def add_set 
+        new_set = get_new_set_info
+        @tracker.add_set(new_set);
+        puts "\nSet #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
+        puts
     end
 	
     # Gets information about the set the user wants to add.
@@ -318,6 +323,7 @@ class PopTrackUI
         puts
     end
     
+    # Print out the information of a specific figure
     def view_figure
         while true
             print_header("VIEW FIGURE")
@@ -330,7 +336,9 @@ class PopTrackUI
             end
         end 
     end
-
+    
+    # Checks to see if the figure exists. If it does, print it and
+    # return true. Else, print an error message and print false
     def can_print_figure?(set, figure_name)
         found_figure = set.find_figure(figure_name)
 
