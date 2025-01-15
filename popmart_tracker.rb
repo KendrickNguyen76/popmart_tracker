@@ -9,7 +9,7 @@ require "./code/popmart_tracker_ui.rb"
 # Main function, runs the popmart tracker by created
 # a new PopTrackUI object.
 def main
-	program = PopTrackUI.new
+    program = PopTrackUI.new
     program.run_tracker
 end
 
