@@ -71,7 +71,9 @@ class PopMartDatabaseHandler
             raise StandardError.new "Set #{brand} #{series_name} does not exist in database"
         end
     end
-
+    
+    # Note to self, give this a better name
+    # Also add some documentation
     def delete_specific_set(brand, series_name)
         begin
             get_set_information(brand, series_name)

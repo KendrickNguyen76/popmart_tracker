@@ -65,6 +65,16 @@ class PopTrackLogic
             raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
         end
     end
+    
+    # Needs to be given the name and brand of set. Deletes the set if
+    # it exists in @sets. Raise an error if it doesn't
+    def delete_set(brand_name, series_name)
+        key = generate_dict_key(brand_name, series_name)
+        
+        @sets.delete(key) do
+            raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
+        end
+    end
 
 end
 

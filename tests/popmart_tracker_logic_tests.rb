@@ -92,5 +92,13 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_nil(find_result)
     end
 
+    def test_delete_set_deletes_correct_set
+        @test_tracker.add_set(@test_set)
+        @test_tracker.delete_set("brand", "series name")
+
+        assert_equal(0, @test_tracker.sets.length)
+        assert_raise(ArgumentError.new "Set with name series name and brand brand does not exist") {@test_tracker.get_set("brand", "series name")}
+    end
+
 end
 
