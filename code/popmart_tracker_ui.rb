@@ -18,7 +18,7 @@ class PopTrackUI
 
     HELP_FILE = "code/docs/help.txt" 
 
-    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, "DELETE FIGURE" => true}
+    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, "DELETE FIGURE" => true, "DELETE SET" => true}
     VALID_COMMAND_HASH.default = false	
 
 
@@ -86,6 +86,8 @@ class PopTrackUI
             view_figure()
         when "DELETE FIGURE"
             delete_figure()
+        when "DELETE SET"
+            delete_set_command()
         end
     end
     
@@ -376,7 +378,7 @@ class PopTrackUI
     
     # Needs to be given a set key and the name of a PopMartFigure object.
     # Checks to see if the figure can be deleted. If it can be, execute
-    # the deletion and return true. If not, return false.
+    # the deletion. If not, print an error.
     def can_delete_figure?(set_key, figure_name)
         begin
            @tracker.delete_figure_in_specified_set(set_key, figure_name)
@@ -385,4 +387,25 @@ class PopTrackUI
             puts error.message
         end
     end
+    
+    # Executes the DELETE SET command. This one does not follow
+    # the same naming convention as the other methods because
+    # I already used the name "delete_set", and naming is hard.
+    def delete_set_command
+        print_header("DELETE SET")
+
+        set = prompt_for_set_name
+        confirm_delete = get_yes_or_no_answer("Are you sure you want to delete the set #{set.brand} #{set.series_name}")
+
+        if confirm_delete
+            puts "\nDeleting Set..."
+            @tracker.delete_set(set.brand, set.series_name)
+            puts "Completed Delete!"
+        else
+            puts "\nCancelling Delete Operation" 
+        end
+
+        puts
+    end    
+
 end

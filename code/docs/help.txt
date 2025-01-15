@@ -9,8 +9,10 @@ QUIT - Exit the program
 Set Commands:
 ADD SET - Add a Popmart set
 VIEW SET - View a set's information (name, price, figure names)
+DELETE SET - Delete a specific set
 
 Figure Commands:
 ADD FIGURE - Add a figure to a Popmart set
 MARK FIGURE - Mark a figure as collected
 VIEW FIGURE - View a figure's information (name, probability, etc.)
+DELETE FIGURE - Delete a specific figure
