@@ -27,7 +27,6 @@ class PopTrackUI
         @tracker = PopTrackLogic.new
         @running = true
         print_start_up()
-        run_tracker()
     end
 	
     # Prints the start up message for a popmart tracker program
