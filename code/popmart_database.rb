@@ -33,7 +33,6 @@ class PopMartDatabaseHandler
             ) STRICT;
         SQL
         
-        # We'll come back to the figures table later
         @db.execute <<-SQL
             CREATE TABLE IF NOT EXISTS popmart_figures (
                 figure_name TEXT PRIMARY KEY,
@@ -64,6 +63,7 @@ class PopMartDatabaseHandler
     # exception to alert the user.
     def get_set_information(brand, series_name)
         result = @db.execute "SELECT * FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand, series_name]
+
         if !result.empty?
             return result[0]
         else 
@@ -95,6 +95,18 @@ class PopMartDatabaseHandler
 
         @db.execute("INSERT INTO popmart_figures (figure_name, probability, is_collected, is_secret, brand, series_name) 
                     VALUES (?, ?, ?, ?, ?, ?)", [fig_name, probability, is_collected, is_secret, brand, series_name])
+    end
+    
+    # Takes in the name of a figure. Returns the corresponding
+    # row from the popmart_figures database table.
+    def get_fig_from_db(figure_name)
+        result = @db.execute("SELECT * FROM popmart_figures WHERE figure_name = ?", [figure_name])
+
+        if !result.empty?
+           return result[0] 
+        else
+            raise StandardError.new "Figure #{figure_name} does not exist in the database"
+        end 
     end
 
     # Closes the connection to the database.
