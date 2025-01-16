@@ -21,8 +21,8 @@ class TestPopMartDatabse < Test::Unit::TestCase
 
     # Tests adding popmart sets to the database
     def test_adding_set_to_database
-        @test_handler.add_set_to_database("Foo", "Bar", 0.0)
-        @test_handler.add_set_to_database("Perrin", "Aybara", 15.768)
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Perrin", "Aybara", 15.768)
         test_result_one = @test_handler.get_set_information("Foo", "Bar")
         test_result_two = @test_handler.get_set_information("Perrin", "Aybara")
 
@@ -32,10 +32,10 @@ class TestPopMartDatabse < Test::Unit::TestCase
 
     # Tests adding duplicate sets to the database, should raise error
     def test_adding_duplicate_set
-        @test_handler.add_set_to_database("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
 
         assert_raise_message("Set Foo Bar already exists") {
-            @test_handler.add_set_to_database("Foo", "Bar", 0.0)
+            @test_handler.add_set_to_db("Foo", "Bar", 0.0)
         }
     end
 
@@ -48,10 +48,10 @@ class TestPopMartDatabse < Test::Unit::TestCase
 
     # Tests deleting a specific row from the popmart_sets table
     def test_deleting_row_from_sets_table
-        @test_handler.add_set_to_database("Foo", "Bar", 0.0)
-        @test_handler.add_set_to_database("Book", "Store", 17.76)
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Book", "Store", 17.76)
 
-        @test_handler.delete_specific_set("Foo", "Bar")
+        @test_handler.delete_set_from_db("Foo", "Bar")
 
         assert_equal(@test_handler.get_set_information("Book", "Store"), ["Book", "Store", 17.76])
         assert_raise_message("Set Foo Bar does not exist in database") {
@@ -62,7 +62,7 @@ class TestPopMartDatabse < Test::Unit::TestCase
     # Tests deleting nonexistent set from the database
     def test_deleting_nonexistant_set_raises_error
         assert_raise_message("Set Foo Bar does not exist in database") {
-            @test_handler.delete_specific_set("Foo", "Bar")
+            @test_handler.delete_set_from_db("Foo", "Bar")
         }
     end
 

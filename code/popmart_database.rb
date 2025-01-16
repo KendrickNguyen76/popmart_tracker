@@ -34,7 +34,6 @@ class PopMartDatabaseHandler
         SQL
         
         # We'll come back to the figures table later
-        """
         @db.execute <<-SQL
             CREATE TABLE IF NOT EXISTS popmart_figures (
                 figure_name TEXT PRIMARY KEY,
@@ -46,13 +45,12 @@ class PopMartDatabaseHandler
                 FOREIGN KEY (brand, series_name) REFERENCES popmart_sets (brand, series_name)
             ) STRICT;
         SQL
-        """
     end
 
-    # Needs to be given a string representing the brand name, a string representing 
-    # the series name, and a double representing the price for a singular popmart set.
-    # Adds it to the popmart_sets table in the database.
-    def add_set_to_database(brand, series_name, price)
+    # Needs to be given a string representing the brand name, a string 
+    # representing the series name, and a double representing the price 
+    # for a singular popmart set. Adds it to the popmart_sets table.
+    def add_set_to_db(brand, series_name, price)
         begin
             @db.execute "INSERT INTO popmart_sets (brand, series_name, price) VALUES (?, ?, ?)", [brand, series_name, price]
         rescue SQLite3::ConstraintException => e
@@ -60,9 +58,10 @@ class PopMartDatabaseHandler
         end
     end
     
-    # Needs to be given the brand name and series name for a popmart set. Searches the 
-    # popmart_sets table for the specified set and returns its row information in an array.
-    # If nothing is found, raise an exception to alert the user.
+    # Needs to be given the brand name and series name for a popmart set.
+    # Searches the popmart_sets table for the specified set and returns 
+    # its row information in an array. If nothing is found, raise an 
+    # exception to alert the user.
     def get_set_information(brand, series_name)
         result = @db.execute "SELECT * FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand, series_name]
         if !result.empty?
@@ -71,16 +70,31 @@ class PopMartDatabaseHandler
             raise StandardError.new "Set #{brand} #{series_name} does not exist in database"
         end
     end
-    
-    # Note to self, give this a better name
-    # Also add some documentation
-    def delete_specific_set(brand, series_name)
+
+    # Needs to be given the brand and series name of a set.
+    # Deletes that set from the popmart_sets table.
+    def delete_set_from_db(brand, series_name)
         begin
             get_set_information(brand, series_name)
             @db.execute "DELETE FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand, series_name]
         rescue StandardError => e
             raise e
         end
+    end
+    
+    # Takes in all the information needed to define one figure.
+    # Adds it to the popmart_figures table in the database.
+    # The brand and series name are their own parameters. The
+    # rest of the figure's information is in the fig_info array
+    # parameter.
+    def add_fig_to_db(brand, series_name, fig_info)
+        fig_name = fig_info[0]
+        probability = fig_info[1]
+        is_collected = fig_info[2]
+        is_secret = fig_info[3]
+
+        @db.execute("INSERT INTO popmart_figures (figure_name, probability, is_collected, is_secret, brand, series_name) 
+                    VALUES (?, ?, ?, ?, ?, ?)", [fig_name, probability, is_collected, is_secret, brand, series_name])
     end
 
     # Closes the connection to the database.
