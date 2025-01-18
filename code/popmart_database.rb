@@ -101,7 +101,7 @@ class PopMartDatabaseHandler
                     VALUES (?, ?, ?, ?, ?, ?)", 
                     [fig_name, probability, is_collected, is_secret, brand, series_name])
     end
-    
+ 
     # Takes in the name of a figure. Returns the corresponding
     # row from the popmart_figures database table.
     def get_fig_from_db(figure_name)
@@ -122,6 +122,15 @@ class PopMartDatabaseHandler
         rescue StandardError => e
             raise e
         end
+    end
+
+    # Changes the collected status of the specified figure from
+    # false to true. In this case, this would be 0 to 1.
+    def mark_fig_in_db(figure_name)
+        @db.execute("UPDATE popmart_figures
+                     SET is_collected = 1
+                     WHERE figure_name = ?",
+                     [figure_name])
     end
 
     # Closes the connection to the database.

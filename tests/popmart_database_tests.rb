@@ -69,14 +69,14 @@ class TestPopMartDatabse < Test::Unit::TestCase
     # Tests adding popmart figures to the database
     def test_adding_figures_to_database
         fig_info_one = ["fig_name", 0.25, 0, 0]
-        fig_info_two = ["fig_name2", 0.5, 1, 1]
+        fig_info_two = ["fig_name2", 0.5, 0, 1]
         @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
         @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
         test_result_one = @test_handler.get_fig_from_db("fig_name")
         test_result_two = @test_handler.get_fig_from_db("fig_name2")
 
         assert_equal(test_result_one, ["fig_name", 0.25, 0, 0, "Foo", "Bar"]) 
-        assert_equal(test_result_two, ["fig_name2", 0.5, 1, 1, "Perrin", "Aybara"])
+        assert_equal(test_result_two, ["fig_name2", 0.5, 0, 1, "Perrin", "Aybara"])
     end
     
     # Tests searching for figure that does not exist in the database
@@ -89,7 +89,7 @@ class TestPopMartDatabse < Test::Unit::TestCase
     # Test deleting a specific row from the popmart_figures table
     def test_deleting_row_from_popmart_figures
         fig_info_one = ["fig_name", 0.25, 0, 0]
-        fig_info_two = ["fig_name2", 0.5, 1, 1]
+        fig_info_two = ["fig_name2", 0.5, 0, 1]
         @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
         @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
 
@@ -107,6 +107,22 @@ class TestPopMartDatabse < Test::Unit::TestCase
         assert_raise_message("Figure Foo does not exist in database") {
             @test_handler.delete_fig_from_db("Foo")
         }
+    end
+    
+    # Tests that the is_collected column of a specified row can be change
+    def test_mark_figure_as_collected_in_database        
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one) 
+        fig_info_two = ["fig_name2", 0.5, 1, 1]
+        @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
+
+        @test_handler.mark_fig_in_db("fig_name")
+        @test_handler.mark_fig_in_db("fig_name2")
+        
+        test_result_one = @test_handler.get_fig_from_db("fig_name")
+        assert_equal(test_result_one, ["fig_name", 0.25, 1, 0, "Foo", "Bar"])  
+        test_result_two = @test_handler.get_fig_from_db("fig_name2")
+        assert_equal(test_result_two, ["fig_name2", 0.5, 1, 1, "Perrin", "Aybara"])
     end
 
     # When tests end, drop all tables in the test database and close the connection
