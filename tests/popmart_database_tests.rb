@@ -65,6 +65,26 @@ class TestPopMartDatabse < Test::Unit::TestCase
             @test_handler.delete_set_from_db("Foo", "Bar")
         }
     end
+    
+    # Tests adding popmart figures to the database
+    def test_adding_figures_to_database
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        fig_info_two = ["fig_name2", 0.5, 1, 1]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
+        @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
+        test_result_one = @test_handler.get_fig_from_db("fig_name")
+        test_result_two = @test_handler.get_fig_from_db("fig_name2")
+
+        assert_equal(test_result_one, ["fig_name", 0.25, 0, 0, "Foo", "Bar"]) 
+        assert_equal(test_result_two, ["fig_name2", 0.5, 1, 1, "Perrin", "Aybara"])
+    end
+    
+    # Tests searching for figure that does not exist in the database
+    def test_searching_for_nonexistent_figures
+        assert_raise_message("Figure DoesNotExist does not exist in database") {
+            @test_handler.get_fig_from_db("DoesNotExist")
+        }
+    end
 
     # When tests end, drop all tables in the test database and close the connection
     def teardown

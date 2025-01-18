@@ -90,11 +90,12 @@ class PopMartDatabaseHandler
     def add_fig_to_db(brand, series_name, fig_info)
         fig_name = fig_info[0]
         probability = fig_info[1]
-        is_collected = fig_info[2]
-        is_secret = fig_info[3]
+        is_collected = fig_info[2] # This has to be 1 or 0, not true or false
+        is_secret = fig_info[3] # This has to be 1 or 0, not true or false
 
         @db.execute("INSERT INTO popmart_figures (figure_name, probability, is_collected, is_secret, brand, series_name) 
-                    VALUES (?, ?, ?, ?, ?, ?)", [fig_name, probability, is_collected, is_secret, brand, series_name])
+                    VALUES (?, ?, ?, ?, ?, ?)", 
+                    [fig_name, probability, is_collected, is_secret, brand, series_name])
     end
     
     # Takes in the name of a figure. Returns the corresponding
@@ -105,7 +106,7 @@ class PopMartDatabaseHandler
         if !result.empty?
            return result[0] 
         else
-            raise StandardError.new "Figure #{figure_name} does not exist in the database"
+            raise StandardError.new "Figure #{figure_name} does not exist in database"
         end 
     end
 
@@ -118,5 +119,6 @@ class PopMartDatabaseHandler
     # Drops all tables in the database.
     def reset_database_for_testing_only
         @db.execute "DROP TABLE popmart_sets"
+        @db.execute "DROP TABLE popmart_figures"
     end
 end
