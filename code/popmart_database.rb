@@ -51,7 +51,8 @@ class PopMartDatabaseHandler
     # for a singular popmart set. Adds it to the popmart_sets table.
     def add_set_to_db(brand, series_name, price)
         begin
-            @db.execute "INSERT INTO popmart_sets (brand, series_name, price) VALUES (?, ?, ?)", [brand, series_name, price]
+            @db.execute("INSERT INTO popmart_sets (brand, series_name, price) VALUES (?, ?, ?)", 
+                        [brand, series_name, price])
         rescue SQLite3::ConstraintException => e
             raise StandardError.new "Set #{brand} #{series_name} already exists"
         end
@@ -62,9 +63,10 @@ class PopMartDatabaseHandler
     # its row information in an array. If nothing is found, raise an 
     # exception to alert the user.
     def get_set_information(brand, series_name)
-        result = @db.execute "SELECT * FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand, series_name]
+        result = @db.execute("SELECT * FROM popmart_sets WHERE brand = ? AND series_name = ?", 
+                             [brand, series_name])
 
-        if !result.empty?
+        if !(result.empty?)
             return result[0]
         else 
             raise StandardError.new "Set #{brand} #{series_name} does not exist in database"
@@ -76,7 +78,8 @@ class PopMartDatabaseHandler
     def delete_set_from_db(brand, series_name)
         begin
             get_set_information(brand, series_name)
-            @db.execute "DELETE FROM popmart_sets WHERE brand = ? AND series_name = ?", [brand, series_name]
+            @db.execute("DELETE FROM popmart_sets WHERE brand = ? AND series_name = ?", 
+                        [brand, series_name])
         rescue StandardError => e
             raise e
         end
@@ -93,7 +96,8 @@ class PopMartDatabaseHandler
         is_collected = fig_info[2] # This has to be 1 or 0, not true or false
         is_secret = fig_info[3] # This has to be 1 or 0, not true or false
 
-        @db.execute("INSERT INTO popmart_figures (figure_name, probability, is_collected, is_secret, brand, series_name) 
+        @db.execute("INSERT INTO popmart_figures (figure_name, probability, 
+                    is_collected, is_secret, brand, series_name) 
                     VALUES (?, ?, ?, ?, ?, ?)", 
                     [fig_name, probability, is_collected, is_secret, brand, series_name])
     end
@@ -103,11 +107,21 @@ class PopMartDatabaseHandler
     def get_fig_from_db(figure_name)
         result = @db.execute("SELECT * FROM popmart_figures WHERE figure_name = ?", [figure_name])
 
-        if !result.empty?
+        if !(result.empty?)
            return result[0] 
         else
             raise StandardError.new "Figure #{figure_name} does not exist in database"
         end 
+    end
+
+    # Deletes the specified figure from the popmart_figure database table
+    def delete_fig_from_db(figure_name)
+        begin
+            get_fig_from_db(figure_name)
+            @db.execute("DELETE FROM popmart_figures WHERE figure_name = ?", [figure_name])
+        rescue StandardError => e
+            raise e
+        end
     end
 
     # Closes the connection to the database.
