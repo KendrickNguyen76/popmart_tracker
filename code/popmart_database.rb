@@ -6,7 +6,7 @@
 require "sqlite3"
 
 class PopMartDatabaseHandler
-    # PopMartDatabaseHanlder is a class that is responsible for facilitating
+    # PopMartDatabaseHandler is a class that is responsible for facilitating
     # database transactions such as creating tables, inserting information into
     # the database, and taking information out of it. It is connected to an SQLite
     # database through the use of the sqlite3 gem.
@@ -93,8 +93,8 @@ class PopMartDatabaseHandler
     def add_fig_to_db(brand, series_name, fig_info)
         fig_name = fig_info[0]
         probability = fig_info[1]
-        is_collected = fig_info[2] # This has to be 1 or 0, not true or false
-        is_secret = fig_info[3] # This has to be 1 or 0, not true or false
+        is_collected = fig_info[2] # 1 or 0, not true or false
+        is_secret = fig_info[3] # 1 or 0, not true or false
 
         @db.execute("INSERT INTO popmart_figures (figure_name, probability, 
                     is_collected, is_secret, brand, series_name) 
