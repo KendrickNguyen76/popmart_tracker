@@ -39,7 +39,10 @@ class PopTrackLogic
     
     # Needs to be given the brand, series name, and probability.
     # Creates a PopMartSet object and adds it to the @sets hash.
-     
+    def add_set_using_params(brand, series_name, price)
+        key = generate_dict_key(brand, series_name)
+        @sets[key] = PopMartSet.new(brand, series_name, price)
+    end
 
 	# Needs to be given a name of a Popmart set, and a PopMartFigure object.
 	# Adds the object to the set with the specified name.

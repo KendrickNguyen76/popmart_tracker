@@ -108,6 +108,17 @@ class TestPopTrackLogic < Test::Unit::TestCase
             @test_tracker.delete_set("Doesnt", "Exist")
         }
     end
+    
+    # Tests that add_set_using_params correctly adds a set
+    def test_can_add_pop_mart_set_objects_to_class_using_params
+        assert_equal(@test_tracker.sets.size, 0)
 
+        @test_tracker.add_set_using_params("Brand", "Series Name", 0.0)
+
+        assert_equal(@test_tracker.sets.size, 1)
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].brand, "Brand")
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].series_name, "Series Name")
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].price, 0.0)
+    end
 end
 

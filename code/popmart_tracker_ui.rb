@@ -93,8 +93,8 @@ class PopTrackUI
     # Handles ADD SET command
     def add_set 
         new_set = get_new_set_info
-        @tracker.add_set(new_set);
-        puts "\nSet #{new_set.brand} #{new_set.series_name} created with price #{new_set.price}"
+        @tracker.add_set_using_params(new_set[0], new_set[1], new_set[2]);
+        puts "\nSet #{new_set[0]} #{new_set[1]} created with price #{new_set[2]}"
         puts
     end
 	
@@ -112,7 +112,7 @@ class PopTrackUI
 
         price = get_price_input
 
-        return PopMartSet.new(brand, series_name, price)
+        return [brand, series_name, price]
     end
 	
     # Asks the user for the set price. If it is a valid price,
