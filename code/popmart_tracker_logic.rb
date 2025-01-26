@@ -36,7 +36,11 @@ class PopTrackLogic
         key = generate_dict_key(popmart_set.brand, popmart_set.series_name)
         @sets[key] = popmart_set
     end
-	
+    
+    # Needs to be given the brand, series name, and probability.
+    # Creates a PopMartSet object and adds it to the @sets hash.
+     
+
 	# Needs to be given a name of a Popmart set, and a PopMartFigure object.
 	# Adds the object to the set with the specified name.
     def add_to_specific_set(set_name, popmart_figure)

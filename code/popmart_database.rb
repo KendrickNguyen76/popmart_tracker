@@ -125,6 +125,12 @@ class PopMartDatabaseHandler
         end 
     end
 
+    # Takes in the brand and series name of a set.
+    # Finds all figures associated with that set.
+    def get_fig_for_specific_set(brand, series_name)
+        
+    end
+
     # Deletes the specified figure from the popmart_figure database table
     def delete_fig_from_db(figure_name)
         begin
