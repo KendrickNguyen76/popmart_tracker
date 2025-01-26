@@ -91,6 +91,34 @@ class TestPopTrackLogic < Test::Unit::TestCase
 
         assert_nil(find_result)
     end
+    
+    # Tests to see if delete_set() can delete the specified test
+    def test_delete_set_deletes_correct_set
+        @test_tracker.add_set(@test_set)
+        @test_tracker.delete_set("brand", "series name")
 
+        assert_equal(0, @test_tracker.sets.length)
+        assert_raise(ArgumentError.new "Set with name series name and brand brand does not exist") {@test_tracker.get_set("brand", "series name")}
+    end
+    
+    # Tests to see if delete_set() raises an error when trying to 
+    # delete a set that does not exist within @test_tracker
+    def test_delete_set_raises_error_when_set_does_not_exist
+        assert_raise_message("Set with name Exist and brand Doesnt does not exist") {
+            @test_tracker.delete_set("Doesnt", "Exist")
+        }
+    end
+    
+    # Tests that add_set_using_params correctly adds a set
+    def test_can_add_pop_mart_set_objects_to_class_using_params
+        assert_equal(@test_tracker.sets.size, 0)
+
+        @test_tracker.add_set_using_params("Brand", "Series Name", 0.0)
+
+        assert_equal(@test_tracker.sets.size, 1)
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].brand, "Brand")
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].series_name, "Series Name")
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].price, 0.0)
+    end
 end
 

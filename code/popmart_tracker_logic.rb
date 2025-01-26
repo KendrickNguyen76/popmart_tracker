@@ -36,7 +36,14 @@ class PopTrackLogic
         key = generate_dict_key(popmart_set.brand, popmart_set.series_name)
         @sets[key] = popmart_set
     end
-	
+    
+    # Needs to be given the brand, series name, and probability.
+    # Creates a PopMartSet object and adds it to the @sets hash.
+    def add_set_using_params(brand, series_name, price)
+        key = generate_dict_key(brand, series_name)
+        @sets[key] = PopMartSet.new(brand, series_name, price)
+    end
+
 	# Needs to be given a name of a Popmart set, and a PopMartFigure object.
 	# Adds the object to the set with the specified name.
     def add_to_specific_set(set_name, popmart_figure)
@@ -62,6 +69,16 @@ class PopTrackLogic
         if @sets.has_key?(key)
             return @sets[key]
         else
+            raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
+        end
+    end
+    
+    # Needs to be given the name and brand of set. Deletes the set if
+    # it exists in @sets. Raise an error if it doesn't
+    def delete_set(brand_name, series_name)
+        key = generate_dict_key(brand_name, series_name)
+        
+        @sets.delete(key) do
             raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
         end
     end

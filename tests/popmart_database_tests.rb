@@ -21,8 +21,8 @@ class TestPopMartDatabse < Test::Unit::TestCase
 
     # Tests adding popmart sets to the database
     def test_adding_set_to_database
-        @test_handler.add_set_to_database("Foo", "Bar", 0.0)
-        @test_handler.add_set_to_database("Perrin", "Aybara", 15.768)
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Perrin", "Aybara", 15.768)
         test_result_one = @test_handler.get_set_information("Foo", "Bar")
         test_result_two = @test_handler.get_set_information("Perrin", "Aybara")
 
@@ -32,10 +32,10 @@ class TestPopMartDatabse < Test::Unit::TestCase
 
     # Tests adding duplicate sets to the database, should raise error
     def test_adding_duplicate_set
-        @test_handler.add_set_to_database("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
 
         assert_raise_message("Set Foo Bar already exists") {
-            @test_handler.add_set_to_database("Foo", "Bar", 0.0)
+            @test_handler.add_set_to_db("Foo", "Bar", 0.0)
         }
     end
 
@@ -48,10 +48,10 @@ class TestPopMartDatabse < Test::Unit::TestCase
 
     # Tests deleting a specific row from the popmart_sets table
     def test_deleting_row_from_sets_table
-        @test_handler.add_set_to_database("Foo", "Bar", 0.0)
-        @test_handler.add_set_to_database("Book", "Store", 17.76)
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Book", "Store", 17.76)
 
-        @test_handler.delete_specific_set("Foo", "Bar")
+        @test_handler.delete_set_from_db("Foo", "Bar")
 
         assert_equal(@test_handler.get_set_information("Book", "Store"), ["Book", "Store", 17.76])
         assert_raise_message("Set Foo Bar does not exist in database") {
@@ -62,7 +62,86 @@ class TestPopMartDatabse < Test::Unit::TestCase
     # Tests deleting nonexistent set from the database
     def test_deleting_nonexistant_set_raises_error
         assert_raise_message("Set Foo Bar does not exist in database") {
-            @test_handler.delete_specific_set("Foo", "Bar")
+            @test_handler.delete_set_from_db("Foo", "Bar")
+        }
+    end
+    
+    # Tests adding popmart figures to the database
+    def test_adding_figures_to_database
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        fig_info_two = ["fig_name2", 0.5, 0, 1]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
+        @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
+        test_result_one = @test_handler.get_fig_from_db("fig_name")
+        test_result_two = @test_handler.get_fig_from_db("fig_name2")
+
+        assert_equal(test_result_one, ["fig_name", 0.25, 0, 0, "Foo", "Bar"]) 
+        assert_equal(test_result_two, ["fig_name2", 0.5, 0, 1, "Perrin", "Aybara"])
+    end
+    
+    # Tests searching for figure that does not exist in the database
+    def test_searching_for_nonexistent_figures
+        assert_raise_message("Figure DoesNotExist does not exist in database") {
+            @test_handler.get_fig_from_db("DoesNotExist")
+        }
+    end
+    
+    # Test deleting a specific row from the popmart_figures table
+    def test_deleting_row_from_popmart_figures
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        fig_info_two = ["fig_name2", 0.5, 0, 1]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
+        @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
+
+        test_result_one = @test_handler.get_fig_from_db("fig_name")
+        assert_equal(test_result_one, ["fig_name", 0.25, 0, 0, "Foo", "Bar"]) 
+        
+        @test_handler.delete_fig_from_db("fig_name2")
+        assert_raise_message("Figure fig_name2 does not exist in database") {
+            @test_handler.get_fig_from_db("fig_name2")
+        }
+    end
+
+    # Tests deleting nonexistent figure from the database
+    def test_deleting_nonexistant_figure_raises_error
+        assert_raise_message("Figure Foo does not exist in database") {
+            @test_handler.delete_fig_from_db("Foo")
+        }
+    end
+    
+    # Tests that the is_collected column of a specified row can be change
+    def test_mark_figure_as_collected_in_database        
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one) 
+        fig_info_two = ["fig_name2", 0.5, 1, 1]
+        @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
+
+        @test_handler.mark_fig_in_db("fig_name")
+        @test_handler.mark_fig_in_db("fig_name2")
+        
+        test_result_one = @test_handler.get_fig_from_db("fig_name")
+        assert_equal(test_result_one, ["fig_name", 0.25, 1, 0, "Foo", "Bar"])  
+        test_result_two = @test_handler.get_fig_from_db("fig_name2")
+        assert_equal(test_result_two, ["fig_name2", 0.5, 1, 1, "Perrin", "Aybara"])
+    end
+    
+    # Tests that the get_all_sets method works properly
+    def test_get_all_sets_correctly_returns_all_sets
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Perrin", "Aybara", 15.768)
+        
+        test_get_all_sets = @test_handler.get_all_sets
+
+        assert_true(test_get_all_sets.length == 2)
+        assert_equal(test_get_all_sets[0], ["Foo", "Bar", 0.0])
+        assert_equal(test_get_all_sets[1], ["Perrin", "Aybara", 15.768])
+    end
+
+    # Tests that the get_all_sets method throws an error 
+    # when there are no sets in the database
+    def test_get_all_sets_throws_error_when_database_empty
+        assert_raise_message("No sets stored in database") {
+            @test_handler.get_all_sets
         }
     end
 
