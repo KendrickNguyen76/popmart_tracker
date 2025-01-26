@@ -99,7 +99,7 @@ class PopTrackUI
     end
 	
     # Gets information about the set the user wants to add.
-    # Returns a PopMartSet object with that information.
+    # Returns an Array with all of this information.
     def get_new_set_info
         print_header("ADD SET")
         puts "Please enter the set information:"

@@ -4,6 +4,7 @@
 
 # Require Statements
 require_relative "popmart_database.rb"
+require_relative "popmart_set.rb"
 
 class PopMartDBLoader
     # PopMartDBLoader is a class that is responsible for loading
@@ -28,8 +29,27 @@ class PopMartDBLoader
     end
     
     # Loads in all sets from the database. Stores and returns
-    # it as a dictionary to be used in the program
+    # it as a dictionary to be used in the program.
     def load_sets_from_db
-        # nothing here yet!  
+        all_sets = @db_handler.get_all_sets
+        
+    end
+
+
+    private
+    
+    # Takes in a list of lists. Each list represents
+    # a row from the popmart_sets table. Converts them
+    # into a list of PopMartSet objects.
+    def convert_to_set_obj(set_list)
+        popmart_set_list = Array.new
+
+        set_list.each do |set|
+            new_set_obj = PopMartSet.new(set_list[0], set_list[1],
+                                         set_list[2])
+            popmart_set_list.append(new_set_obj)
+        end
+
+        return popmart_set_list
     end
 end
