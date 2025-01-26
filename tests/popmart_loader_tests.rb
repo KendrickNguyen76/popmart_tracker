@@ -19,13 +19,13 @@ class TestPopMartDBLoader < Test::Unit::TestCase
     # Setup the test cases by creating an instanse variable that
     # contains a PopMartDBLoader object
     def setup
-        @test_loader = PopMartDBLoader.new("test.db")
+        @test_loader = PopMartDBLoader.new("test2.db")
     end
     
     # Tests that the db_path instance variable is correctly 
     # defined when given a value for it
     def test_can_initialize_by_providing_db_path_string
-        assert_equal("test.db", @test_loader.db_path)
+        assert_equal("test2.db", @test_loader.db_path)
     end
     
     # Tests that the db_path instance variable is correctly defined

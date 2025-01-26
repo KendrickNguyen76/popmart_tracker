@@ -124,6 +124,26 @@ class TestPopMartDatabse < Test::Unit::TestCase
         test_result_two = @test_handler.get_fig_from_db("fig_name2")
         assert_equal(test_result_two, ["fig_name2", 0.5, 1, 1, "Perrin", "Aybara"])
     end
+    
+    # Tests that the get_all_sets method works properly
+    def test_get_all_sets_correctly_returns_all_sets
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Perrin", "Aybara", 15.768)
+        
+        test_get_all_sets = @test_handler.get_all_sets
+
+        assert_true(test_get_all_sets.length == 2)
+        assert_equal(test_get_all_sets[0], ["Foo", "Bar", 0.0])
+        assert_equal(test_get_all_sets[1], ["Perrin", "Aybara", 15.768])
+    end
+
+    # Tests that the get_all_sets method throws an error 
+    # when there are no sets in the database
+    def test_get_all_sets_throws_error_when_database_empty
+        assert_raise_message("No sets stored in database") {
+            @test_handler.get_all_sets
+        }
+    end
 
     # When tests end, drop all tables in the test database and close the connection
     def teardown

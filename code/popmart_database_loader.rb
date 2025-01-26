@@ -18,11 +18,18 @@ class PopMartDBLoader
 
     attr_reader :db_path
 
-    DB_PATH_DEFAULT = "placeholder"
+    DB_PATH_DEFAULT = "placeholder.db"
     
 
     # Constructor for a PopMartDBLoader object.
     def initialize(provided_db=DB_PATH_DEFAULT)
-       @db_path = provided_db 
+       @db_path = provided_db
+       @db_handler = PopMartDatabaseHandler.new(@db_path)
+    end
+    
+    # Loads in all sets from the database. Stores and returns
+    # it as a dictionary to be used in the program
+    def load_sets_from_db
+        # nothing here yet!  
     end
 end

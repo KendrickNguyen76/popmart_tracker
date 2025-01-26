@@ -72,6 +72,17 @@ class PopMartDatabaseHandler
             raise StandardError.new "Set #{brand} #{series_name} does not exist in database"
         end
     end
+    
+    # Returns all sets in the popmart_sets table
+    def get_all_sets
+        all_sets = @db.execute("SELECT * FROM popmart_sets")
+
+        if !(all_sets.empty?)
+            return all_sets
+        else
+            raise StandardError.new "No sets stored in database"
+        end
+    end
 
     # Needs to be given the brand and series name of a set.
     # Deletes that set from the popmart_sets table.

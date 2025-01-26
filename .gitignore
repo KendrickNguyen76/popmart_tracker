@@ -2,7 +2,7 @@
 .DS_Store
 
 # Test files
-tests/test.db
+tests/*.db
 
 # Bash files
 setup.sh
