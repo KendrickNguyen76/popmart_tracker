@@ -128,7 +128,14 @@ class PopMartDatabaseHandler
     # Takes in the brand and series name of a set.
     # Finds all figures associated with that set.
     def get_fig_for_specific_set(brand, series_name)
+        result = @db.execute("SELECT * FROM popmart_figures WHERE brand = ? AND series_name = ?",
+                              [brand, series_name])
         
+        if !(result.empty?)
+           return result
+        else
+            raise StandardError.new "Set #{brand} #{series_name} has no figures in database"
+        end 
     end
 
     # Deletes the specified figure from the popmart_figure database table

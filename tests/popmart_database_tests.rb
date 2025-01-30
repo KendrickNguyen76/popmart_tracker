@@ -144,6 +144,37 @@ class TestPopMartDatabse < Test::Unit::TestCase
             @test_handler.get_all_sets
         }
     end
+    
+    # Tests that get_fig_from_db returns a list of all rows in
+    # popmart_figures that have foreign keys that match the 
+    # specified parameters.
+    def test_get_fig_for_specific_set_returns_all_figures_in_given_set
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one) 
+        fig_info_two = ["fig_name2", 0.5, 1, 1]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_two)
+
+        test_result = @test_handler.get_fig_for_specific_set("Foo", "Bar")
+
+        assert_equal(test_result[0], ["fig_name", 0.25, 0, 0, "Foo", "Bar"]) 
+        assert_equal(test_result[1], ["fig_name2", 0.5, 1, 1, "Foo", "Bar"])
+    end
+    
+    # Tests that get_fig_for_specific_set raises an error when the
+    # specified set has no figures. Should work for figures that do
+    # and don't exist in the database.
+    def test_get_fig_for_specifc_set_raises_error_when_no_figures
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+
+        assert_raise_message("Set Foo Bar has no figures in database") {
+            @test_handler.get_fig_for_specific_set("Foo", "Bar")
+        }
+
+        assert_raise_message("Set Heh Heh has no figures in database") {
+            @test_handler.get_fig_for_specific_set("Heh", "Heh")
+        }
+    end
 
     # When tests end, drop all tables in the test database and close the connection
     def teardown
