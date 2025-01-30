@@ -13,8 +13,10 @@ class PopMartDBLoader
 
     # It has one instance variable and one constant:
 
-    # @db_path - represents the connection to the database that this
+    # @db_path - Represents the connection to the database that this
     #            class will interact with through PopMartDatabaseHandler
+    # @db_handler - The PopMartDatabaseHandler that will be used to
+    #               access information from the database
     # DB_PATH_DEFAULT - A constant default value for @db_path
 
     attr_reader :db_path
@@ -28,11 +30,21 @@ class PopMartDBLoader
        @db_handler = PopMartDatabaseHandler.new(@db_path)
     end
     
+    # Saves a list of PopMartSet objects into the database
+    # using @db_handler. 
+    def save_sets_into_db(popmart_set_list)
+        popmart_set_list.each do |popmart_set|
+            @db_handler.add_set_to_db(popmart_set.brand,
+                                      popmart_set.series_name,
+                                      popmart_set.price)
+        end
+    end
+
     # Loads in all sets from the database. Stores and returns
     # it as a dictionary to be used in the program.
     def load_sets_from_db
         all_sets = @db_handler.get_all_sets
-        
+
     end
 
 
