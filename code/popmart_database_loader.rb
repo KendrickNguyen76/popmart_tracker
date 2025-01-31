@@ -34,9 +34,11 @@ class PopMartDBLoader
     # using @db_handler. 
     def save_sets_into_db(popmart_set_list)
         popmart_set_list.each do |popmart_set|
-            @db_handler.add_set_to_db(popmart_set.brand,
+            @db_handler.add_set_to_db(popmart_set.brand, 
                                       popmart_set.series_name,
                                       popmart_set.price)
+            # Will need functionality later for loading
+            # figures from each set into database
         end
     end
 
@@ -44,7 +46,7 @@ class PopMartDBLoader
     # it as a dictionary to be used in the program.
     def load_sets_from_db
         all_sets = @db_handler.get_all_sets
-
+        return convert_to_set_obj(all_sets)
     end
 
 
@@ -57,8 +59,7 @@ class PopMartDBLoader
         popmart_set_list = Array.new
 
         set_list.each do |set|
-            new_set_obj = PopMartSet.new(set_list[0], set_list[1],
-                                         set_list[2])
+            new_set_obj = PopMartSet.new(set[0], set[1], set[2])
             popmart_set_list.append(new_set_obj)
         end
 
