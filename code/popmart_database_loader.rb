@@ -37,16 +37,16 @@ class PopMartDBLoader
             @db_handler.add_set_to_db(popmart_set.brand, 
                                       popmart_set.series_name,
                                       popmart_set.price)
-            # Will need functionality later for loading
-            # figures from each set into database
+
+            save_figures_into_db(popmart_set)
         end
     end
 
     # Loads in all sets from the database. Stores and returns
     # it as a dictionary to be used in the program.
     def load_sets_from_db
-        all_sets = @db_handler.get_all_sets
-        return convert_to_set_obj(all_sets)
+        all_sets = @db_handler.get_all_sets # Add error handling here
+        return convert_to_set_obj(all_sets) 
     end
 
 
@@ -65,7 +65,7 @@ class PopMartDBLoader
 
         return popmart_set_list
     end
-    
+
     # Takes in a PopMartSet. Loads all of its
     # figures into the database
     def save_figures_into_db(popmart_set)
@@ -79,6 +79,18 @@ class PopMartDBLoader
             fig_info = [fig.name, fig.probability, 
                         is_collected, is_secret]
             @db_handler.add_fig_to_db(the_brand, the_series, fig_info)
+        end
+    end
+
+    # Requires a PopMartFigure object that is currently
+    # empty (has no figures). Loads it with the corresponding
+    # figures from the database
+    def insert_figs_from_db(set) # Add error handling for this one too
+        all_figs = @db_handler.get_fig_for_specific_set(set.brand, set.series_name)
+ 
+        all_figs.each do |fig_arr|
+            # Create a figure here
+            # Then add it to the set
         end
     end
 end
