@@ -30,8 +30,8 @@ class PopMartDBLoader
        @db_handler = PopMartDatabaseHandler.new(@db_path)
     end
     
-    # Saves a list of PopMartSet objects into the database
-    # using @db_handler. 
+    # Saves a list of PopMartSet objects into 
+    # the database using @db_handler. 
     def save_sets_into_db(popmart_set_list)
         popmart_set_list.each do |popmart_set|
             @db_handler.add_set_to_db(popmart_set.brand, 
@@ -64,5 +64,21 @@ class PopMartDBLoader
         end
 
         return popmart_set_list
+    end
+    
+    # Takes in a PopMartSet. Loads all of its
+    # figures into the database
+    def save_figures_into_db(popmart_set)
+        the_brand = popmart_set.brand
+        the_series = popmart_set.series_name
+
+        popmart_set.figures.each do |fig|
+            is_collected = (fig.is_collected ? 1 : 0)
+            is_secret = (fig.is_secret ? 1 : 0)
+        
+            fig_info = [fig.name, fig.probability, 
+                        is_collected, is_secret]
+            @db_handler.add_fig_to_db(the_brand, the_series, fig_info)
+        end
     end
 end
