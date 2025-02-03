@@ -48,18 +48,37 @@ class TestPopMartDBLoader < Test::Unit::TestCase
         File.delete(default_loader.db_path)
     end
     
-    # This test is temporarily broken since not all functionality is up yet!
     # Tests that you can save sets into and load sets from
     # the database through the loader
-    #def test_can_save_and_load_sets_from_database
-        #@test_loader.save_sets_into_db(@test_list)
-        #sets_loaded_from_db = @test_loader.load_sets_from_db
+    def test_can_save_and_load_sets_from_database
+        @test_loader.save_sets_into_db(@test_list)
+        sets_loaded_from_db = @test_loader.load_sets_from_db
 
-        #assert_equal(sets_loaded_from_db.length, @test_list.length)
-        #3.times do |i|
-            #assert_equal(@test_list[i].to_s, sets_loaded_from_db[i].to_s)
-        #end
-    #end
+        assert_equal(sets_loaded_from_db.length, @test_list.length)
+        3.times do |i|
+            assert_equal(@test_list[i].to_s, sets_loaded_from_db[i].to_s)
+        end
+    end
+    
+    # Tests to see if the figures within a Popmart Set can be
+    # properly loaded into and out of the database.
+    def test_can_save_and_load_figures_from_database
+        @test_loader.save_sets_into_db(@test_list)
+        sets_loaded_from_db = @test_loader.load_sets_from_db
+
+        assert_equal(sets_loaded_from_db.length, @test_list.length)
+
+        3.times do |i|
+            
+        end
+    end
+
+    # Tests that load_sets_from_db returns an empty list
+    # when no sets are currently stored in the database
+    def test_loading_empty_database_returns_empty_array
+        empty_array = @test_loader.load_sets_from_db
+        assert_true(empty_array.empty?)
+    end
 
     def teardown
         # Clears out the test2.db file before performing another test

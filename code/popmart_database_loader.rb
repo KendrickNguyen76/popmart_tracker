@@ -45,8 +45,18 @@ class PopMartDBLoader
     # Loads in all sets from the database. Stores and returns
     # it as a dictionary to be used in the program.
     def load_sets_from_db
-        all_sets = @db_handler.get_all_sets # Add error handling here
-        return convert_to_set_obj(all_sets) 
+        begin
+            all_sets = @db_handler.get_all_sets
+            popmart_sets = convert_to_set_obj(all_sets)
+
+            popmart_sets.each do |set|
+                insert_figs_from_db(set)
+            end
+
+            return popmart_sets
+        rescue StandardError
+            return Array.new
+        end
     end
 
 
@@ -55,10 +65,10 @@ class PopMartDBLoader
     # Takes in a list of lists. Each list represents
     # a row from the popmart_sets table. Converts them
     # into a list of PopMartSet objects.
-    def convert_to_set_obj(set_list)
+    def convert_to_set_obj(set_rows)
         popmart_set_list = Array.new
 
-        set_list.each do |set|
+        set_rows.each do |set|
             new_set_obj = PopMartSet.new(set[0], set[1], set[2])
             popmart_set_list.append(new_set_obj)
         end
@@ -73,8 +83,8 @@ class PopMartDBLoader
         the_series = popmart_set.series_name
 
         popmart_set.figures.each do |fig|
-            is_collected = (fig.is_collected ? 1 : 0)
-            is_secret = (fig.is_secret ? 1 : 0)
+            is_collected = bool_to_int(fig.is_collected)
+            is_secret = bool_to_int(fig.is_secret)
         
             fig_info = [fig.name, fig.probability, 
                         is_collected, is_secret]
@@ -86,11 +96,30 @@ class PopMartDBLoader
     # empty (has no figures). Loads it with the corresponding
     # figures from the database
     def insert_figs_from_db(set) # Add error handling for this one too
-        all_figs = @db_handler.get_fig_for_specific_set(set.brand, set.series_name)
- 
-        all_figs.each do |fig_arr|
-            # Create a figure here
-            # Then add it to the set
+        begin
+            all_figs = @db_handler.get_fig_for_specific_set(set.brand, set.series_name)
+        rescue StandardError
+            all_figs = Array.new
         end
+
+        all_figs.each do |fig_arr|
+            new_fig = PopMartFigure.new(fig_arr[0], fig_arr[1], 
+                                       int_to_bool(fig_arr[2]), 
+                                       int_to_bool(fig_arr[3]))
+            set.add_figure(new_fig) 
+        end
+    end
+
+    # Takes in an boolean value. If it is true, 
+    # return 1. If it is false, return 0.
+    def bool_to_int(bool)
+        return (bool ? 1 : 0)
+    end
+    
+    # Takes in an integer that is 0 or 1.
+    # If it is 1, return true. If it is 0,
+    # return false.
+    def int_to_bool(integer)
+        return integer == 1
     end
 end
