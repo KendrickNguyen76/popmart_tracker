@@ -158,7 +158,7 @@ class PopMartDatabaseHandler
     # Changes the collected status of the specified figure from
     # false to true. In this case, this would be 0 to 1.
     def mark_fig_in_db(figure_name)
-        @db.execute("UPDATE popmart_figures
+        @db.execute("UPDATE popmart_figures 
                      SET is_collected = 1
                      WHERE figure_name = ?",
                      [figure_name])

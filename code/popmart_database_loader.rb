@@ -38,7 +38,9 @@ class PopMartDBLoader
                                       popmart_set.series_name,
                                       popmart_set.price)
 
-            save_figures_into_db(popmart_set)
+            save_figures_into_db(popmart_set.brand,
+                                 popmart_set.series_name,
+                                 popmart_set.figures)
         end
     end
 
@@ -59,6 +61,29 @@ class PopMartDBLoader
         end
     end
 
+    # Takes in the brand and series name of a popmart set.
+    # Loads all of the figures in fig_list into the database
+    # w/ the brand and series name as foreign keys
+    def save_figures_into_db(the_brand, the_series, fig_list)
+        fig_list.each do |fig|
+            is_collected = bool_to_int(fig.is_collected)
+            is_secret = bool_to_int(fig.is_secret)
+        
+            fig_info = [fig.name, fig.probability, 
+                        is_collected, is_secret]
+            @db_handler.add_fig_to_db(the_brand, the_series, fig_info)
+        end
+    end
+    
+    # Takes in a list of strings where each string is the name 
+    # of a figure who has been marked as collected. Changes the 
+    # corresponding column in the database to reflect this change.
+    def mark_figures_in_db(marked_fig_names)
+        marked_fig_names.each do |marked_fig|
+            @db_handler.mark_fig_in_db(marked_fig)
+        end
+    end
+
 
     private
     
@@ -74,22 +99,6 @@ class PopMartDBLoader
         end
 
         return popmart_set_list
-    end
-
-    # Takes in a PopMartSet. Loads all of its
-    # figures into the database
-    def save_figures_into_db(popmart_set)
-        the_brand = popmart_set.brand
-        the_series = popmart_set.series_name
-
-        popmart_set.figures.each do |fig|
-            is_collected = bool_to_int(fig.is_collected)
-            is_secret = bool_to_int(fig.is_secret)
-        
-            fig_info = [fig.name, fig.probability, 
-                        is_collected, is_secret]
-            @db_handler.add_fig_to_db(the_brand, the_series, fig_info)
-        end
     end
 
     # Requires a PopMartFigure object that is currently
@@ -115,7 +124,7 @@ class PopMartDBLoader
     def bool_to_int(bool)
         return (bool ? 1 : 0)
     end
-    
+   
     # Takes in an integer that is 0 or 1.
     # If it is 1, return true. If it is 0,
     # return false.

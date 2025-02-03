@@ -86,6 +86,27 @@ class TestPopMartDBLoader < Test::Unit::TestCase
         assert_true(empty_array.empty?)
     end
 
+    # Tests that mark_figures_in_db correctly sets the collected 
+    # status of the specified figures to "true"
+    def test_mark_figures_in_db_changes_collected_status_to_true
+        @test_loader.save_sets_into_db(@test_list)
+        marked_fig_names = Array.new
+
+        9.times do |n|
+            fig_name = "fig_#{n}"
+            if n % 2 == 0
+                marked_fig_names.push(fig_name)
+            end
+        end
+
+        @test_loader.mark_figures_in_db(marked_fig_names)
+        loaded_sets = @test_loader.load_sets_from_db
+
+        loaded_sets[0].figures.each do |fig|
+            assert_true(fig.is_collected)
+        end
+    end
+
     def teardown
         # Clears out the test2.db file before performing another test
         File.write("test2.db", "")
