@@ -59,6 +59,20 @@ class TestPopMartDatabse < Test::Unit::TestCase
         }
     end
 
+    # Tests that deleting a specific row from the popmart_sets
+    # table also deletes any rows in popmart_figures that are
+    # associated with it through the FOREIGN KEY
+    def test_deleting_row_from_sets_table_deletes_figures
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
+
+        @test_handler.delete_set_from_db("Foo", "Bar")
+        assert_raise_message("Figure fig_name does not exist in database") {
+            @test_handler.get_fig_from_db("fig_name")
+        }
+    end
+
     # Tests deleting nonexistent set from the database
     def test_deleting_nonexistant_set_raises_error
         assert_raise_message("Set Foo Bar does not exist in database") {
@@ -68,6 +82,9 @@ class TestPopMartDatabse < Test::Unit::TestCase
     
     # Tests adding popmart figures to the database
     def test_adding_figures_to_database
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Perrin", "Aybara", 17.76)
+
         fig_info_one = ["fig_name", 0.25, 0, 0]
         fig_info_two = ["fig_name2", 0.5, 0, 1]
         @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
@@ -88,17 +105,13 @@ class TestPopMartDatabse < Test::Unit::TestCase
     
     # Test deleting a specific row from the popmart_figures table
     def test_deleting_row_from_popmart_figures
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
         fig_info_one = ["fig_name", 0.25, 0, 0]
-        fig_info_two = ["fig_name2", 0.5, 0, 1]
         @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
-        @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
 
-        test_result_one = @test_handler.get_fig_from_db("fig_name")
-        assert_equal(test_result_one, ["fig_name", 0.25, 0, 0, "Foo", "Bar"]) 
-        
-        @test_handler.delete_fig_from_db("fig_name2")
-        assert_raise_message("Figure fig_name2 does not exist in database") {
-            @test_handler.get_fig_from_db("fig_name2")
+        @test_handler.delete_fig_from_db("fig_name")
+        assert_raise_message("Figure fig_name does not exist in database") {
+            @test_handler.get_fig_from_db("fig_name")
         }
     end
 
@@ -110,7 +123,10 @@ class TestPopMartDatabse < Test::Unit::TestCase
     end
     
     # Tests that the is_collected column of a specified row can be change
-    def test_mark_figure_as_collected_in_database        
+    def test_mark_figure_as_collected_in_database
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Perrin", "Aybara", 17.76)
+
         fig_info_one = ["fig_name", 0.25, 0, 0]
         @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one) 
         fig_info_two = ["fig_name2", 0.5, 1, 1]
@@ -142,6 +158,37 @@ class TestPopMartDatabse < Test::Unit::TestCase
     def test_get_all_sets_throws_error_when_database_empty
         assert_raise_message("No sets stored in database") {
             @test_handler.get_all_sets
+        }
+    end
+    
+    # Tests that get_fig_from_db returns a list of all rows in
+    # popmart_figures that have foreign keys that match the 
+    # specified parameters.
+    def test_get_fig_for_specific_set_returns_all_figures_in_given_set
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one) 
+        fig_info_two = ["fig_name2", 0.5, 1, 1]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_two)
+
+        test_result = @test_handler.get_fig_for_specific_set("Foo", "Bar")
+
+        assert_equal(test_result[0], ["fig_name", 0.25, 0, 0, "Foo", "Bar"]) 
+        assert_equal(test_result[1], ["fig_name2", 0.5, 1, 1, "Foo", "Bar"])
+    end
+    
+    # Tests that get_fig_for_specific_set raises an error when the
+    # specified set has no figures. Should work for figures that do
+    # and don't exist in the database.
+    def test_get_fig_for_specifc_set_raises_error_when_no_figures
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+
+        assert_raise_message("Set Foo Bar has no figures in database") {
+            @test_handler.get_fig_for_specific_set("Foo", "Bar")
+        }
+
+        assert_raise_message("Set Heh Heh has no figures in database") {
+            @test_handler.get_fig_for_specific_set("Heh", "Heh")
         }
     end
 

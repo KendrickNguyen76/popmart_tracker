@@ -24,6 +24,9 @@ class PopMartDatabaseHandler
 
     # Creates the tables that the program will need: popmart_sets and popmart_figures
     def create_tables
+        # Makes sure that foreign key constraints are on
+        @db.execute("PRAGMA foreign_keys = ON")
+
         @db.execute <<-SQL
             CREATE TABLE IF NOT EXISTS popmart_sets (
                 brand TEXT,
@@ -41,7 +44,9 @@ class PopMartDatabaseHandler
                 is_secret INTEGER,
                 brand TEXT,
                 series_name TEXT,
-                FOREIGN KEY (brand, series_name) REFERENCES popmart_sets (brand, series_name)
+                FOREIGN KEY (brand, series_name) 
+                REFERENCES popmart_sets(brand, series_name)
+                ON DELETE CASCADE
             ) STRICT;
         SQL
     end
@@ -86,9 +91,11 @@ class PopMartDatabaseHandler
 
     # Needs to be given the brand and series name of a set.
     # Deletes that set from the popmart_sets table.
-    def delete_set_from_db(brand, series_name)
+    def delete_set_from_db(brand, series_name) 
         begin
             get_set_information(brand, series_name)
+            # The ON CASCADE should ensure that all rows
+            # in popmart_figures also get deleted
             @db.execute("DELETE FROM popmart_sets WHERE brand = ? AND series_name = ?", 
                         [brand, series_name])
         rescue StandardError => e
@@ -128,7 +135,14 @@ class PopMartDatabaseHandler
     # Takes in the brand and series name of a set.
     # Finds all figures associated with that set.
     def get_fig_for_specific_set(brand, series_name)
+        result = @db.execute("SELECT * FROM popmart_figures WHERE brand = ? AND series_name = ?",
+                              [brand, series_name])
         
+        if !(result.empty?)
+           return result
+        else
+            raise StandardError.new "Set #{brand} #{series_name} has no figures in database"
+        end 
     end
 
     # Deletes the specified figure from the popmart_figure database table
@@ -144,7 +158,7 @@ class PopMartDatabaseHandler
     # Changes the collected status of the specified figure from
     # false to true. In this case, this would be 0 to 1.
     def mark_fig_in_db(figure_name)
-        @db.execute("UPDATE popmart_figures
+        @db.execute("UPDATE popmart_figures 
                      SET is_collected = 1
                      WHERE figure_name = ?",
                      [figure_name])

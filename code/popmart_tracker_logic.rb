@@ -84,21 +84,3 @@ class PopTrackLogic
     end
 
 end
-
-# Notes:
-    # Need to connect this to popmart_database.rb
-    # - Save all the sets that get added to @sets
-    # - Then at end of program, save them all to the database, should
-    #   hopefully be more efficient in terms of file read/write time
-    # - Or, save them all when the user specifies that they want to
-    #   save things. More responsibility for the user, but less work
-    #   for me (LMAO)
-    # - Only really call the database when the user needs to get a set
-    #   that is not already in @sets
-    # - Only other question is how do I test all of this functionality?
-    # - Probably gonna be a hassle regardless (ugh)
-
-    # Need to develop a UI for this program
-    # - Maybe jump straight into Tkinter? Not sure if that's wise
-    # - Probably best if i got all of the the kinks worked out in
-    #   this class first before I even do any of that. 
