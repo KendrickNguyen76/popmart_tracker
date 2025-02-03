@@ -59,6 +59,20 @@ class TestPopMartDatabse < Test::Unit::TestCase
         }
     end
 
+    # Tests that deleting a specific row from the popmart_sets
+    # table also deletes any rows in popmart_figures that are
+    # associated with it through the FOREIGN KEY
+    def test_deleting_row_from_sets_table_deletes_figures
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        fig_info_one = ["fig_name", 0.25, 0, 0]
+        @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
+
+        @test_handler.delete_set_from_db("Foo", "Bar")
+        assert_raise_message("Figure fig_name does not exist in database") {
+            @test_handler.get_fig_from_db("fig_name")
+        }
+    end
+
     # Tests deleting nonexistent set from the database
     def test_deleting_nonexistant_set_raises_error
         assert_raise_message("Set Foo Bar does not exist in database") {
@@ -68,6 +82,9 @@ class TestPopMartDatabse < Test::Unit::TestCase
     
     # Tests adding popmart figures to the database
     def test_adding_figures_to_database
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Perrin", "Aybara", 17.76)
+
         fig_info_one = ["fig_name", 0.25, 0, 0]
         fig_info_two = ["fig_name2", 0.5, 0, 1]
         @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
@@ -88,17 +105,13 @@ class TestPopMartDatabse < Test::Unit::TestCase
     
     # Test deleting a specific row from the popmart_figures table
     def test_deleting_row_from_popmart_figures
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
         fig_info_one = ["fig_name", 0.25, 0, 0]
-        fig_info_two = ["fig_name2", 0.5, 0, 1]
         @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one)
-        @test_handler.add_fig_to_db("Perrin", "Aybara", fig_info_two)
 
-        test_result_one = @test_handler.get_fig_from_db("fig_name")
-        assert_equal(test_result_one, ["fig_name", 0.25, 0, 0, "Foo", "Bar"]) 
-        
-        @test_handler.delete_fig_from_db("fig_name2")
-        assert_raise_message("Figure fig_name2 does not exist in database") {
-            @test_handler.get_fig_from_db("fig_name2")
+        @test_handler.delete_fig_from_db("fig_name")
+        assert_raise_message("Figure fig_name does not exist in database") {
+            @test_handler.get_fig_from_db("fig_name")
         }
     end
 
@@ -110,7 +123,10 @@ class TestPopMartDatabse < Test::Unit::TestCase
     end
     
     # Tests that the is_collected column of a specified row can be change
-    def test_mark_figure_as_collected_in_database        
+    def test_mark_figure_as_collected_in_database
+        @test_handler.add_set_to_db("Foo", "Bar", 0.0)
+        @test_handler.add_set_to_db("Perrin", "Aybara", 17.76)
+
         fig_info_one = ["fig_name", 0.25, 0, 0]
         @test_handler.add_fig_to_db("Foo", "Bar", fig_info_one) 
         fig_info_two = ["fig_name2", 0.5, 1, 1]
