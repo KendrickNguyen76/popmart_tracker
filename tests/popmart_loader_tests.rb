@@ -64,12 +64,18 @@ class TestPopMartDBLoader < Test::Unit::TestCase
     # properly loaded into and out of the database.
     def test_can_save_and_load_figures_from_database
         @test_loader.save_sets_into_db(@test_list)
-        sets_loaded_from_db = @test_loader.load_sets_from_db
-
-        assert_equal(sets_loaded_from_db.length, @test_list.length)
+        loaded_sets = @test_loader.load_sets_from_db
 
         3.times do |i|
+            test_set_figs = @test_list[i].figures
+            result_set_figs = loaded_sets[i].figures
             
+            test_set_figs.zip(result_set_figs).each do |test_fig, result_fig|
+                assert_equal(test_fig.name, result_fig.name)
+                assert_equal(test_fig.probability, result_fig.probability)
+                assert_equal(test_fig.is_collected, result_fig.is_collected)
+                assert_equal(test_fig.is_secret, result_fig.is_secret)
+            end
         end
     end
 
