@@ -109,7 +109,7 @@ class TestPopMartDBLoader < Test::Unit::TestCase
     
     # Tests that delete_set_in_db deletes all of 
     # the popmart sets given to it
-    def test_delete_set_in_db_correctly_deletes_all_sets
+    def test_delete_sets_in_db_correctly_deletes_all_sets
         @test_loader.save_sets_into_db(@test_list)
         @test_loader.delete_sets_in_db(@test_list)
         should_be_empty = @test_loader.load_sets_from_db
@@ -123,6 +123,22 @@ class TestPopMartDBLoader < Test::Unit::TestCase
         rescue StandardError
             assert_true(false)
         end
+    end
+    
+    # Tests that delete_figs_in_db deletes all of the popmart
+    # figures given to it from the database
+    def test_delete_figs_in_db_correctly_deletes_specifed_figures
+        deleted_fig_names = Array.new
+        
+        @test_list[0].figures.each do |figure|
+            deleted_fig_names.push(figure.name)
+        end
+        
+        @test_loader.save_sets_into_db(@test_list)
+        @test_loader.delete_figs_in_db(deleted_fig_names)
+        results = @test_loader.load_sets_from_db
+
+        assert_true(results[0].figures.empty?)
     end
 
     def teardown
