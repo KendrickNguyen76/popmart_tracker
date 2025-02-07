@@ -5,6 +5,7 @@
 
 # Require statements
 require_relative "popmart_set.rb"
+require_relative "popmart_database_loader.rb"
 
 
 class PopTrackLogic
@@ -18,12 +19,19 @@ class PopTrackLogic
     # @sets - a hash containing all of the Popmart Sets that the user wants to store
     #         * The keys will be the brand name + the series name of the Popmart set
     #         * The values will be PopMartSet objects
+    # @changes - a hash containing all of the changes the user has made so far
+    #            * Each key corresponds to a type of change (Adding, deleting, etc.)
+    #            * Each value will be a list of objects that have been changes
+    #            * Use this hash to update the database
+    # @db_loader - a PopMartDBLoader object that will handle database transactions
     attr_reader :sets
 
 
     # The constructor for the PopTrackLogic class
     def initialize
+        @db_loader = PopMartDBLoader.new
         @sets = Hash.new
+        @changes = Hash.new
     end
 	
     # Generates a set's dictionary key. This is in the format of BRAND_SERIESNAME
