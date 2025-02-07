@@ -106,6 +106,24 @@ class TestPopMartDBLoader < Test::Unit::TestCase
             assert_true(fig.is_collected)
         end
     end
+    
+    # Tests that delete_set_in_db deletes all of 
+    # the popmart sets given to it
+    def test_delete_set_in_db_correctly_deletes_all_sets
+        @test_loader.save_sets_into_db(@test_list)
+        @test_loader.delete_sets_in_db(@test_list)
+        should_be_empty = @test_loader.load_sets_from_db
+
+        assert_true(should_be_empty.empty?)
+
+        begin
+            # If the delete has worked, this line should
+            # run without throwing any errors
+            @test_loader.save_sets_into_db(@test_list)
+        rescue StandardError
+            assert_true(false)
+        end
+    end
 
     def teardown
         # Clears out the test2.db file before performing another test

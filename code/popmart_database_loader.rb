@@ -84,6 +84,23 @@ class PopMartDBLoader
         end
     end
 
+    # Takes in a list of popmart set objects.
+    # Deletes all of them from the database
+    def delete_sets_in_db(to_be_deleted_sets)
+        to_be_deleted_sets.each do |deleted_set|
+            @db_handler.delete_set_from_db(deleted_set.brand,
+                                           deleted_set.series_name)
+        end
+    end
+
+    # Takes in a list of popmart figure names
+    # Deletes all of them from the database
+    def delete_figs_in_db(deleted_fig_names)
+        deleted_fig_names.each do |deleted_fig|
+            @db_handler.delete_fig_from_db(deleted_fig)
+        end
+    end
+
 
     private
     
