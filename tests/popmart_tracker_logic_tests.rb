@@ -15,7 +15,7 @@ class TestPopTrackLogic < Test::Unit::TestCase
 	
     # Create a PopTrackLogic object called test_tracker before each test.
     def setup
-        @test_tracker = PopTrackLogic.new
+        @test_tracker = PopTrackLogic.new("test3.db")
         @test_set = PopMartSet.new("Brand", "Series Name")
     end
 

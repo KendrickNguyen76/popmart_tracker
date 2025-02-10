@@ -28,12 +28,29 @@ class PopTrackLogic
 
 
     # The constructor for the PopTrackLogic class
-    def initialize
-        @db_loader = PopMartDBLoader.new
-        @sets = Hash.new
+    def initialize(database_path="")
+        @db_loader = initialize_loader(database_path)
+        @sets = load_sets
         @changes = Hash.new
     end
-	
+    
+    # Load sets from the database, and returns it as a hash. 
+    # The keys are strings formatted in the manner described in
+    # generate_dict_key, and the values are PopMartSet objects.
+    def load_sets
+        sets_hash = Hash.new
+        sets_from_db = @db_loader.load_sets_from_db
+
+        if !(sets_from_db.empty?)
+            sets_from_db.each do |set|
+               key = generate_dict_key(set.brand, set.series_name)
+               sets_hash[key] = set
+            end
+        end
+
+        return sets_hash
+    end
+
     # Generates a set's dictionary key. This is in the format of BRAND_SERIESNAME
     def generate_dict_key(brand, series_name)
         return (brand + "_" + series_name).upcase
@@ -90,5 +107,16 @@ class PopTrackLogic
             raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
         end
     end
+    
+    
+    private
 
+    # Initializes @db_loader based on the value given to it
+    def initialize_loader(db_path)
+        if db_path.empty?
+            return PopMartDBLoader.new
+        else
+            return PopMartDBLoader.new(db_path)
+        end
+    end
 end
