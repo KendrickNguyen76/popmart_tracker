@@ -123,7 +123,11 @@ class TestPopTrackLogic < Test::Unit::TestCase
     
     # Tests that the @changes hash has been intialized properly
     def test_changes_is_initialized_properly
-        assert_true(@test_tracker.changes["ADDED SETS"].empty?)
+        assert_true(@test_tracker.changes[:added_sets].empty?)
+        assert_true(@test_tracker.changes[:added_figures].empty?)
+        assert_true(@test_tracker.changes[:marked_figures].empty?)
+        assert_true(@test_tracker.changes[:deleted_figures].empty?)
+        assert_true(@test_tracker.changes[:deleted_sets].empty?)
     end
 end
 

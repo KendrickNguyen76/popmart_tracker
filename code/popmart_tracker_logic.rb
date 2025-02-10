@@ -31,7 +31,7 @@ class PopTrackLogic
     def initialize(database_path="")
         @db_loader = initialize_loader(database_path)
         @sets = load_sets
-        @changes = {"ADDED SETS" => Array.new}
+        @changes = initialize_changes
     end
     
     # Load sets from the database, and returns it as a hash. 
@@ -118,5 +118,18 @@ class PopTrackLogic
         else
             return PopMartDBLoader.new(db_path)
         end
+    end
+
+    # Initialize the @changes hash
+    def initialize_changes
+        changes = Hash.new
+
+        changes[:added_sets] = Array.new
+        changes[:added_figures] = Array.new
+        changes[:marked_figures] = Array.new
+        changes[:deleted_figures] = Array.new
+        changes[:deleted_sets] = Array.new
+
+        return changes
     end
 end
