@@ -24,14 +24,14 @@ class PopTrackLogic
     #            * Each value will be a list of objects that have been changes
     #            * Use this hash to update the database
     # @db_loader - a PopMartDBLoader object that will handle database transactions
-    attr_reader :sets
+    attr_reader :sets, :changes
 
 
     # The constructor for the PopTrackLogic class
     def initialize(database_path="")
         @db_loader = initialize_loader(database_path)
         @sets = load_sets
-        @changes = Hash.new
+        @changes = {"ADDED SETS" => Array.new}
     end
     
     # Load sets from the database, and returns it as a hash. 
@@ -107,8 +107,8 @@ class PopTrackLogic
             raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
         end
     end
-    
-    
+
+
     private
 
     # Initializes @db_loader based on the value given to it

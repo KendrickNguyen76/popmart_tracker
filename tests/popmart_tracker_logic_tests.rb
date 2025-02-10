@@ -120,5 +120,10 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].series_name, "Series Name")
         assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].price, 0.0)
     end
+    
+    # Tests that the @changes hash has been intialized properly
+    def test_changes_is_initialized_properly
+        assert_true(@test_tracker.changes["ADDED SETS"].empty?)
+    end
 end
 
