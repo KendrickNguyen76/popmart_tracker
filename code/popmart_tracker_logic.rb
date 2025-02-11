@@ -51,6 +51,11 @@ class PopTrackLogic
         return sets_hash
     end
 
+    # Updates the database to reflect all of the recent changes made.
+    def save_sets
+        save_added_sets
+    end
+
     # Generates a set's dictionary key. This is in the format of BRAND_SERIESNAME
     def generate_dict_key(brand, series_name)
         return (brand + "_" + series_name).upcase
@@ -67,6 +72,7 @@ class PopTrackLogic
     def add_set_using_params(brand, series_name, price)
         key = generate_dict_key(brand, series_name)
         @sets[key] = PopMartSet.new(brand, series_name, price)
+        @changes[:added_sets].push(PopMartSet.new(brand, series_name, price))
     end
 
 	# Needs to be given a name of a Popmart set, and a PopMartFigure object.
@@ -131,5 +137,11 @@ class PopTrackLogic
         changes[:deleted_sets] = Array.new
 
         return changes
+    end
+    
+    # Save all of the sets stored in 
+    # @changes[:added_sets] to the database.
+    def save_added_sets
+       # Execute actions here. Had to stop to eat dinner 
     end
 end
