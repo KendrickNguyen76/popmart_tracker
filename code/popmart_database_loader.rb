@@ -34,38 +34,12 @@ class PopMartDBLoader
     # the database using @db_handler. 
     def save_sets_into_db(popmart_set_list)
         popmart_set_list.each do |popmart_set|
-            # Add check for the set here first, then do these actions
-            # Probably a good idea to move them into a seperate method
-            # just to clean up this method a bit more
-            @db_handler.add_set_to_db(popmart_set.brand, 
-                                      popmart_set.series_name,
-                                      popmart_set.price)
-
-            save_figures_into_db(popmart_set.brand,
-                                 popmart_set.series_name,
-                                 popmart_set.figures)
-            # If it is not new, call a new method that adds figures
-            # instead. I think this should work a lot better.
-            # Basically do something like this:
-
-            # else
-            #   update_set_figure(popmart_set)
-            # end
+            if set_exists?(popmart_set)
+                update_set_figures(popmart_set)
+            else
+                add_new_set_to_db(popmart_set)
+            end
         end
-        
-        # new idea for this method. Right now, it saves any set given to it
-        # plus any figures in that set
-
-        # This time, differentiate it:
-        # - If the set is new, then save and all of its figures
-        # - If the set is not new, skip it?
-
-        # For any set that is not new, check through its figures.
-        # If any figures are new, add them to the database.
-        # If any figures are old, skip them entirely
-
-        # Once all sets and figures are added, other actions can be 
-        # carried out as necessary
     end
 
     # Loads in all sets from the database. Stores and returns
@@ -171,5 +145,49 @@ class PopMartDBLoader
     # return false.
     def int_to_bool(integer)
         return integer == 1
+    end
+
+    # Adds in a completely new set to the database
+    def add_new_set_to_db(popmart_set)
+        @db_handler.add_set_to_db(popmart_set.brand, popmart_set.series_name,
+                                  popmart_set.price)
+        save_figures_into_db(popmart_set.brand,popmart_set.series_name,
+                             popmart_set.figures)
+    end
+    
+    # Checks to see if the given set has new figures.
+    # If it does, add them into the database.
+    def update_set_figures(set)
+        new_figs = Array.new
+
+        set.figures.each do |fig|
+            if !figure_exists?(fig)
+                new_figs.push(fig)
+            end
+        end
+
+        save_figures_into_db(set.brand, set.series_name, new_figs)
+    end
+
+    # Checks to see if a given popmart set already
+    # exists within the database. 
+    def set_exists?(set)
+        begin
+            @db_handler.get_set_information(set.brand, set.series_name)
+            return true
+        rescue StandardError
+            return false
+        end
+    end
+
+    # Checks to see if the given popmart figure
+    # already exists within the database.
+    def figure_exists?(figure)
+        begin
+            @db_handler.get_fig_from_db(figure.name)
+            return true
+        rescue StandardError
+            return false
+        end
     end
 end
