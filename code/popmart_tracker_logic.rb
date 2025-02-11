@@ -129,10 +129,13 @@ class PopTrackLogic
     # Initialize the @changes hash
     def initialize_changes
         changes = Hash.new
-
+        
+        # Delete the first two Arrays, we don't need them anymore
+        # Instead, directly use @sets instead
         changes[:added_sets] = Array.new
         changes[:added_figures] = Array.new
-        changes[:marked_figures] = Array.new
+        changes[:marked_figures] = Array.new # This one could be folded
+        # into the first two as well, but i won't for now b/c its complex
         changes[:deleted_figures] = Array.new
         changes[:deleted_sets] = Array.new
 
@@ -142,6 +145,6 @@ class PopTrackLogic
     # Save all of the sets stored in 
     # @changes[:added_sets] to the database.
     def save_added_sets
-       # Execute actions here. Had to stop to eat dinner 
+        # Come back to this 
     end
 end

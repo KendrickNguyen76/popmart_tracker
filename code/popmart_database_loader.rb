@@ -34,6 +34,9 @@ class PopMartDBLoader
     # the database using @db_handler. 
     def save_sets_into_db(popmart_set_list)
         popmart_set_list.each do |popmart_set|
+            # Add check for the set here first, then do these actions
+            # Probably a good idea to move them into a seperate method
+            # just to clean up this method a bit more
             @db_handler.add_set_to_db(popmart_set.brand, 
                                       popmart_set.series_name,
                                       popmart_set.price)
@@ -41,7 +44,28 @@ class PopMartDBLoader
             save_figures_into_db(popmart_set.brand,
                                  popmart_set.series_name,
                                  popmart_set.figures)
+            # If it is not new, call a new method that adds figures
+            # instead. I think this should work a lot better.
+            # Basically do something like this:
+
+            # else
+            #   update_set_figure(popmart_set)
+            # end
         end
+        
+        # new idea for this method. Right now, it saves any set given to it
+        # plus any figures in that set
+
+        # This time, differentiate it:
+        # - If the set is new, then save and all of its figures
+        # - If the set is not new, skip it?
+
+        # For any set that is not new, check through its figures.
+        # If any figures are new, add them to the database.
+        # If any figures are old, skip them entirely
+
+        # Once all sets and figures are added, other actions can be 
+        # carried out as necessary
     end
 
     # Loads in all sets from the database. Stores and returns
