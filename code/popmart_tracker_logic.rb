@@ -53,7 +53,12 @@ class PopTrackLogic
 
     # Updates the database to reflect all of the recent changes made.
     def save_sets
-        save_added_sets
+        @db_loader.save_sets_into_db(@sets.values)
+    end
+
+    # Updates @sets so that it matches the current state of the database
+    def reload_sets
+        @sets = load_sets
     end
 
     # Generates a set's dictionary key. This is in the format of BRAND_SERIESNAME
@@ -72,7 +77,6 @@ class PopTrackLogic
     def add_set_using_params(brand, series_name, price)
         key = generate_dict_key(brand, series_name)
         @sets[key] = PopMartSet.new(brand, series_name, price)
-        @changes[:added_sets].push(PopMartSet.new(brand, series_name, price))
     end
 
 	# Needs to be given a name of a Popmart set, and a PopMartFigure object.
@@ -130,21 +134,10 @@ class PopTrackLogic
     def initialize_changes
         changes = Hash.new
         
-        # Delete the first two Arrays, we don't need them anymore
-        # Instead, directly use @sets instead
-        changes[:added_sets] = Array.new
-        changes[:added_figures] = Array.new
-        changes[:marked_figures] = Array.new # This one could be folded
-        # into the first two as well, but i won't for now b/c its complex
+        changes[:marked_figures] = Array.new
         changes[:deleted_figures] = Array.new
         changes[:deleted_sets] = Array.new
 
         return changes
-    end
-    
-    # Save all of the sets stored in 
-    # @changes[:added_sets] to the database.
-    def save_added_sets
-        # Come back to this 
     end
 end
