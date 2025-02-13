@@ -141,6 +141,29 @@ class TestPopMartDBLoader < Test::Unit::TestCase
         assert_true(results[0].figures.empty?)
     end
 
+    # Tests that you can update the figures in a set
+    # when calling save_sets_into_db if a figure
+    # already exists in the database
+    def test_updating_figures_for_a_set
+        @test_loader.save_sets_into_db(@test_list)
+        new_fig = PopMartFigure.new("updated_fig", 0.25, false, false)
+        initial_load = @test_loader.load_sets_from_db
+        assert_true(initial_load[2].figures.length == 0)
+
+        @test_list[2].add_figure(new_fig)
+
+        @test_loader.save_sets_into_db(@test_list)
+        results = @test_loader.load_sets_from_db
+        
+        added_fig = results[2].figures[0]
+        
+        assert_true(results[2].figures.length > 0)
+        assert_equal(added_fig.name, new_fig.name)
+        assert_equal(added_fig.probability, new_fig.probability)
+        assert_equal(added_fig.is_collected, new_fig.is_collected)
+        assert_equal(added_fig.is_secret, new_fig.is_secret)
+    end
+
     def teardown
         # Clears out the test2.db file before performing another test
         File.write("test2.db", "")
