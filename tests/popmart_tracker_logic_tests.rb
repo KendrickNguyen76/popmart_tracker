@@ -15,7 +15,7 @@ class TestPopTrackLogic < Test::Unit::TestCase
 	
     # Create a PopTrackLogic object called test_tracker before each test.
     def setup
-        @test_tracker = PopTrackLogic.new
+        @test_tracker = PopTrackLogic.new("test3.db")
         @test_set = PopMartSet.new("Brand", "Series Name")
     end
 
@@ -119,6 +119,38 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].brand, "Brand")
         assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].series_name, "Series Name")
         assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].price, 0.0)
+    end
+    
+    # Tests that the @changes hash has been intialized properly
+    def test_changes_is_initialized_properly
+        assert_true(@test_tracker.changes[:marked_figures].empty?)
+        assert_true(@test_tracker.changes[:deleted_figures].empty?)
+        assert_true(@test_tracker.changes[:deleted_sets].empty?)
+    end
+    
+    # Tests that you can load and save sets between the tracker
+    # and its associated database. Also tests that figures within
+    # a set are also properly loaded and saved
+    def test_loading_and_saving_sets_from_tracker_to_database
+        @test_tracker.add_set(@test_set)
+        test_figure = PopMartFigure.new("name", 1/2, true)
+        @test_tracker.add_to_specific_set("BRAND_SERIES NAME", test_figure)
+        @test_tracker.save_sets
+
+        @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
+        @test_tracker.reload_sets
+
+        assert_true(@test_tracker.sets.length > 0)
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].brand, "Brand")
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].series_name, "Series Name")
+        assert_equal(@test_tracker.sets["BRAND_SERIES NAME"].price, 0.0)
+        
+        find_result = @test_tracker.sets["BRAND_SERIES NAME"].find_figure(test_figure.name)
+        assert_equal(find_result.name, test_figure.name)
+    end
+
+    def teardown
+        File.delete("test3.db")
     end
 end
 

@@ -106,6 +106,63 @@ class TestPopMartDBLoader < Test::Unit::TestCase
             assert_true(fig.is_collected)
         end
     end
+    
+    # Tests that delete_set_in_db deletes all of 
+    # the popmart sets given to it
+    def test_delete_sets_in_db_correctly_deletes_all_sets
+        @test_loader.save_sets_into_db(@test_list)
+        @test_loader.delete_sets_in_db(@test_list)
+        should_be_empty = @test_loader.load_sets_from_db
+
+        assert_true(should_be_empty.empty?)
+
+        begin
+            # If the delete has worked, this line should
+            # run without throwing any errors
+            @test_loader.save_sets_into_db(@test_list)
+        rescue StandardError
+            assert_true(false)
+        end
+    end
+    
+    # Tests that delete_figs_in_db deletes all of the popmart
+    # figures given to it from the database
+    def test_delete_figs_in_db_correctly_deletes_specifed_figures
+        deleted_fig_names = Array.new
+        
+        @test_list[0].figures.each do |figure|
+            deleted_fig_names.push(figure.name)
+        end
+        
+        @test_loader.save_sets_into_db(@test_list)
+        @test_loader.delete_figs_in_db(deleted_fig_names)
+        results = @test_loader.load_sets_from_db
+
+        assert_true(results[0].figures.empty?)
+    end
+
+    # Tests that you can update the figures in a set
+    # when calling save_sets_into_db if a figure
+    # already exists in the database
+    def test_updating_figures_for_a_set
+        @test_loader.save_sets_into_db(@test_list)
+        new_fig = PopMartFigure.new("updated_fig", 0.25, false, false)
+        initial_load = @test_loader.load_sets_from_db
+        assert_true(initial_load[2].figures.length == 0)
+
+        @test_list[2].add_figure(new_fig)
+
+        @test_loader.save_sets_into_db(@test_list)
+        results = @test_loader.load_sets_from_db
+        
+        added_fig = results[2].figures[0]
+        
+        assert_true(results[2].figures.length > 0)
+        assert_equal(added_fig.name, new_fig.name)
+        assert_equal(added_fig.probability, new_fig.probability)
+        assert_equal(added_fig.is_collected, new_fig.is_collected)
+        assert_equal(added_fig.is_secret, new_fig.is_secret)
+    end
 
     def teardown
         # Clears out the test2.db file before performing another test
