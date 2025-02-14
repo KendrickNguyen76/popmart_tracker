@@ -174,8 +174,7 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_true(@test_tracker.changes[:marked_figures].empty?)
     end
 
-    # Tests that the tracker can update the database to reflect
-    # which figures have been marked as collected
+    # Tests that @changes[:marked_figures] is added to and cleared properly
     def test_changes_marked_figures_gets_cleared_when_saving
         @test_tracker.add_set(@test_set)
         test_figure = PopMartFigure.new("name", 1/2, false)
@@ -191,6 +190,63 @@ class TestPopTrackLogic < Test::Unit::TestCase
         
         assert_true(@test_tracker.changes[:marked_figures].empty?)
     end
+    
+    # Tests that you can delete sets in the database from
+    # the tracker class
+    def test_deleting_figures_in_database_from_tracker
+        @test_tracker.add_set(@test_set)
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_true(@test_tracker.sets.values.length > 0)
+
+        @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_false(@test_tracker.sets.values.length > 0)
+        assert_raise_message("Set with name Series Name and brand Brand does not exist") {
+            @test_tracker.get_set(@test_set.brand, @test_set.series_name)
+        }
+    end
+    
+    # Tests that @changes[:deleted_sets] is cleared and added to properly
+    def test_changes_deleted_sets_is_cleared_when_saving
+        @test_tracker.add_set(@test_set)
+        @test_tracker.save_sets
+        @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
+        
+        assert_true(@test_tracker.changes[:deleted_sets].length > 0)
+
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_false(@test_tracker.changes[:deleted_sets].length > 0)
+    end
+
+=begin
+    # This test reveals that there is a major bug in my current delete process
+    # It occurs when a set is newly added and hasn't been saved to the database yet.
+    # When I delete that set from @sets, it succeeds w/o problem, and adds the set
+    # to @changes[:deleted_sets]. However, this becomes a problem when I call save_sets
+    # The set i am trying to delete no longer exists in @sets, so it doesn't get saved.
+    # Therefore, delete freaks out since I am trying to delete a nonexistent set from
+    # the database. Need to find fix for this
+
+    # Tests that @changes[:deleted_sets] is cleared and added to properly
+    def test_changes_deleted_sets_is_cleared_when_saving
+        @test_tracker.add_set(@test_set)
+        @test_tracker.save_sets
+        @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
+        
+        assert_true(@test_tracker.changes[:deleted_sets].length > 0)
+
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_false(@test_tracker.changes[:deleted_sets].length > 0)
+    end
+=end
 
     def teardown
         File.delete("test3.db")

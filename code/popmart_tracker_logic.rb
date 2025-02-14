@@ -38,6 +38,7 @@ class PopTrackLogic
     def save_sets
         @db_loader.save_sets_into_db(@sets.values)
         update_db_collected_status
+        update_db_deleted_sets
     end
 
     # Updates @sets so that it matches the current state of the database
@@ -98,7 +99,10 @@ class PopTrackLogic
     def delete_set(brand_name, series_name)
         key = generate_dict_key(brand_name, series_name)
         
-        @sets.delete(key) do
+        if @sets.has_key?(key)
+            @changes[:deleted_sets].push(@sets[key])
+            @sets.delete(key)
+        else
             raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
         end
     end
@@ -149,5 +153,13 @@ class PopTrackLogic
     def update_db_collected_status
         @db_loader.mark_figures_in_db(@changes[:marked_figures])
         @changes[:marked_figures].clear
+    end
+    
+    # Iterates through changes[:deleted_sets], and
+    # updates the database so that every listed
+    # set gets removed.
+    def update_db_deleted_sets
+        @db_loader.delete_sets_in_db(@changes[:deleted_sets])
+        @changes[:deleted_sets].clear
     end
 end
