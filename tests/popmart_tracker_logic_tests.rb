@@ -233,7 +233,6 @@ class TestPopTrackLogic < Test::Unit::TestCase
     # the database. This test should verify that the bug has been fixed.
     def test_newly_added_sets_that_are_then_deleted_get_ignored_during_save
         @test_tracker.add_set(@test_set)
-        @test_tracker.save_sets
         @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
         
         begin
