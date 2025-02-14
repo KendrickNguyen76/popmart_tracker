@@ -148,6 +148,49 @@ class TestPopTrackLogic < Test::Unit::TestCase
         find_result = @test_tracker.sets["BRAND_SERIES NAME"].find_figure(test_figure.name)
         assert_equal(find_result.name, test_figure.name)
     end
+    
+    # Tests that the tracker can update the database to reflect
+    # which figures have been marked as collected
+    def test_marking_figures_in_database_from_tracker
+        @test_tracker.add_set(@test_set)
+
+        test_figure = PopMartFigure.new("name", 1/2, false)
+        @test_tracker.add_to_specific_set("BRAND_SERIES NAME", test_figure)
+        added_figure = @test_tracker.get_set(@test_set.brand, @test_set.series_name).find_figure("name")
+
+        assert_false(added_figure.is_collected)
+
+        set_name = @test_tracker.generate_dict_key(@test_set.brand, @test_set.series_name)
+        @test_tracker.mark_figure_in_specified_set(set_name, test_figure.name)
+
+        assert_false(@test_tracker.changes[:marked_figures].empty?)
+
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+        
+        reloaded_fig = @test_tracker.get_set(@test_set.brand, @test_set.series_name).find_figure("name")
+        
+        assert_true(reloaded_fig.is_collected)
+        assert_true(@test_tracker.changes[:marked_figures].empty?)
+    end
+
+    # Tests that the tracker can update the database to reflect
+    # which figures have been marked as collected
+    def test_changes_marked_figures_gets_cleared_when_saving
+        @test_tracker.add_set(@test_set)
+        test_figure = PopMartFigure.new("name", 1/2, false)
+
+        @test_tracker.add_to_specific_set("BRAND_SERIES NAME", test_figure)
+        set_name = @test_tracker.generate_dict_key(@test_set.brand, @test_set.series_name)
+        @test_tracker.mark_figure_in_specified_set(set_name, test_figure.name)
+
+        assert_false(@test_tracker.changes[:marked_figures].empty?)
+
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+        
+        assert_true(@test_tracker.changes[:marked_figures].empty?)
+    end
 
     def teardown
         File.delete("test3.db")

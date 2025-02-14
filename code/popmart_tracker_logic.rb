@@ -34,26 +34,10 @@ class PopTrackLogic
         @changes = initialize_changes
     end
     
-    # Load sets from the database, and returns it as a hash. 
-    # The keys are strings formatted in the manner described in
-    # generate_dict_key, and the values are PopMartSet objects.
-    def load_sets
-        sets_hash = Hash.new
-        sets_from_db = @db_loader.load_sets_from_db
-
-        if !(sets_from_db.empty?)
-            sets_from_db.each do |set|
-               key = generate_dict_key(set.brand, set.series_name)
-               sets_hash[key] = set
-            end
-        end
-
-        return sets_hash
-    end
-
     # Updates the database to reflect all of the recent changes made.
     def save_sets
         @db_loader.save_sets_into_db(@sets.values)
+        update_db_collected_status
     end
 
     # Updates @sets so that it matches the current state of the database
@@ -89,6 +73,7 @@ class PopTrackLogic
     # Marks the figure within the specified set as collected
     def mark_figure_in_specified_set(set_name, figure_name)
         @sets[set_name].mark_figure_as_collected(figure_name)
+        @changes[:marked_figures].push(figure_name)
     end
     
     # Needs to be given the name of a Popmart set and a PopMartFigure object.
@@ -139,5 +124,30 @@ class PopTrackLogic
         changes[:deleted_sets] = Array.new
 
         return changes
+    end
+
+    # Load sets from the database, and returns it as a hash. 
+    # The keys are strings formatted in the manner described in
+    # generate_dict_key, and the values are PopMartSet objects.
+    def load_sets
+        sets_hash = Hash.new
+        sets_from_db = @db_loader.load_sets_from_db
+
+        if !(sets_from_db.empty?)
+            sets_from_db.each do |set|
+               key = generate_dict_key(set.brand, set.series_name)
+               sets_hash[key] = set
+            end
+        end
+
+        return sets_hash
+    end
+
+    # Iterates through changes[:marked_figures], and 
+    # updates all of their corresponding rows in the
+    # database so that they are marked as collected.
+    def update_db_collected_status
+        @db_loader.mark_figures_in_db(@changes[:marked_figures])
+        @changes[:marked_figures].clear
     end
 end
