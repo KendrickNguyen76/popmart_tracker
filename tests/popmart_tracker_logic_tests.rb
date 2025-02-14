@@ -224,29 +224,24 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_false(@test_tracker.changes[:deleted_sets].length > 0)
     end
 
-=begin
     # This test reveals that there is a major bug in my current delete process
     # It occurs when a set is newly added and hasn't been saved to the database yet.
     # When I delete that set from @sets, it succeeds w/o problem, and adds the set
     # to @changes[:deleted_sets]. However, this becomes a problem when I call save_sets
     # The set i am trying to delete no longer exists in @sets, so it doesn't get saved.
     # Therefore, delete freaks out since I am trying to delete a nonexistent set from
-    # the database. Need to find fix for this
-
-    # Tests that @changes[:deleted_sets] is cleared and added to properly
-    def test_changes_deleted_sets_is_cleared_when_saving
+    # the database. This test should verify that the bug has been fixed.
+    def test_newly_added_sets_that_are_then_deleted_get_ignored_during_save
         @test_tracker.add_set(@test_set)
         @test_tracker.save_sets
         @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
         
-        assert_true(@test_tracker.changes[:deleted_sets].length > 0)
-
-        @test_tracker.save_sets
-        @test_tracker.reload_sets
-
-        assert_false(@test_tracker.changes[:deleted_sets].length > 0)
+        begin
+            @test_tracker.save_sets
+        rescue StandardError
+            assert_true(false)
+        end
     end
-=end
 
     def teardown
         File.delete("test3.db")

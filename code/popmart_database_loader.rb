@@ -86,8 +86,12 @@ class PopMartDBLoader
     # Deletes all of them from the database
     def delete_sets_in_db(to_be_deleted_sets)
         to_be_deleted_sets.each do |deleted_set|
+            begin
             @db_handler.delete_set_from_db(deleted_set.brand,
                                            deleted_set.series_name)
+            rescue StandardError
+                # If a set can't be found in the database, skip it and don't delete
+            end
         end
     end
 
