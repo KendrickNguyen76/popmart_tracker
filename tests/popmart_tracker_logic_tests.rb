@@ -40,7 +40,7 @@ class TestPopTrackLogic < Test::Unit::TestCase
 	
     # Tests that add_to_specific_set() allows you to 
     # add a figure to a specific set
-    def test_can_add_pop_mart_figure_to_specific_set
+    def test_can_add_popmart_figure_to_specific_set
         test_figure = PopMartFigure.new("name", 1/2, true)
 
         @test_tracker.add_set(@test_set)
@@ -48,6 +48,18 @@ class TestPopTrackLogic < Test::Unit::TestCase
         find_result = @test_tracker.sets["BRAND_SERIES NAME"].find_figure(test_figure.name)
 
         assert_equal(find_result.name, test_figure.name)
+    end
+
+    # Tests that add_fig_using_params() allows you to 
+    # add a figure to a specific set
+    def test_can_add_popmart_figure_with_add_fig_using_params
+        figure_info = ["name", 0.5, true, false]
+
+        @test_tracker.add_set(@test_set)
+        @test_tracker.add_fig_using_params("BRAND_SERIES NAME", figure_info)
+        find_result = @test_tracker.sets["BRAND_SERIES NAME"].find_figure(figure_info[0])
+
+        assert_equal(find_result.name, figure_info[0])
     end
 
     # Tests that get_set() correctly returns correct set

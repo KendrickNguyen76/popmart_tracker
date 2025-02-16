@@ -65,10 +65,20 @@ class PopTrackLogic
         @sets[key] = PopMartSet.new(brand, series_name, price)
     end
 
-	# Needs to be given a name of a Popmart set, and a PopMartFigure object.
-	# Adds the object to the set with the specified name.
+    # Needs to be given a name of a Popmart set, and a PopMartFigure object.
+    # Adds the object to the set with the specified name.
     def add_to_specific_set(set_name, popmart_figure)
         @sets[set_name].add_figure(popmart_figure)
+    end
+
+    # Needs to be given a name of a Popmart set, and an array that
+    # contains all of the information to build a Popmart figure.
+    # Creates a popmart figure object, and adds it the set with
+    # the specified name
+    def add_fig_using_params(set_name, fig_info)
+        new_fig = PopMartFigure.new(fig_info[0], fig_info[1], 
+                                    fig_info[2], fig_info[3])
+        add_to_specific_set(set_name, new_fig)
     end
     
     # Needs to be given the name of a Popmart set and a PopMartFigure object.

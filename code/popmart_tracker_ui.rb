@@ -205,8 +205,9 @@ class PopTrackUI
         figure_probability = get_probability_input
         figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
         figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
-
-        print "\nFigure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
+        
+        put
+        print "Figure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
         return PopMartFigure.new(figure_name, figure_probability, figure_is_collected, figure_is_secret)
     end
 	

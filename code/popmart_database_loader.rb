@@ -90,7 +90,8 @@ class PopMartDBLoader
             @db_handler.delete_set_from_db(deleted_set.brand,
                                            deleted_set.series_name)
             rescue StandardError
-                # If a set can't be found in the database, skip it and don't delete
+                # If a set can't be found in the database,
+                # skip it and don't delete
             end
         end
     end
@@ -99,7 +100,12 @@ class PopMartDBLoader
     # Deletes all of them from the database
     def delete_figs_in_db(deleted_fig_names)
         deleted_fig_names.each do |deleted_fig|
-            @db_handler.delete_fig_from_db(deleted_fig)
+            begin
+                @db_handler.delete_fig_from_db(deleted_fig)
+            rescue StandardError
+                # If a figure can't be found in the database,
+                # skip it and don't delete
+            end
         end
     end
 
