@@ -165,9 +165,9 @@ class PopTrackUI
 
             print "#{existing_set.brand} #{existing_set.series_name} was found\n\n"
 
-            new_figure = prompt_for_new_figure
+            new_figure_info = prompt_for_new_figure_info
 
-            if can_add_figure?(set_key, new_figure)
+            if can_add_figure?(set_key, new_figure_info)
                 puts "Figure #{new_figure.name} added to #{existing_set.brand} #{existing_set.series_name}"
                 puts
                 break
@@ -198,17 +198,17 @@ class PopTrackUI
     end
 	
     # Prompts user for information about the new figure that
-    # will be added. Returns a PopMartFigure object.
-    def prompt_for_new_figure
+    # will be added. Returns an array of all inputs
+    def prompt_for_new_figure_info
         print "Figure Name: "
         figure_name = gets.chomp
         figure_probability = get_probability_input
         figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
         figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
         
-        put
+        puts
         print "Figure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
-        return PopMartFigure.new(figure_name, figure_probability, figure_is_collected, figure_is_secret)
+        return [figure_name, figure_probability, figure_is_collected, figure_is_secret]
     end
 	
     # Prompts for a figure's probability. Will continually ask the
@@ -266,12 +266,12 @@ class PopTrackUI
         end
     end
 	
-    # Checks to see if the figure_to_be_added can be added to the set
+    # Checks to see if the new figure can be added to the set
     # represented by set_key. If it can, return true. If not, prints
     # out the error message and return false.
-    def can_add_figure?(set_key, figure_to_be_added)
+    def can_add_figure?(set_key, new_fig_info)
         begin
-            @tracker.add_to_specific_set(set_key, figure_to_be_added)
+            @tracker.add_fig_using_params(set_key, new_fig_info)
             return true
         rescue => error
             puts error.message
