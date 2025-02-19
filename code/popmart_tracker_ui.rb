@@ -154,7 +154,9 @@ class PopTrackUI
         end
     end
     
-
+    # Checks to see if it is possible to add new_set
+    # into the system. If not, print a message to
+    # alert the user.
     def can_add_set?(new_set)
         begin 
             @tracker.get_set(new_set[0], new_set[1])
@@ -424,6 +426,7 @@ class PopTrackUI
         puts
     end    
     
+    # Saves all recent changes
     def save_data
         puts "\nSaving data..."
         @tracker.save_sets
