@@ -21,7 +21,7 @@ class PopMartDBLoader
 
     attr_reader :db_path
 
-    DB_PATH_DEFAULT = "placeholder.db"
+    DB_PATH_DEFAULT = "sets.db"
     
 
     # Constructor for a PopMartDBLoader object.

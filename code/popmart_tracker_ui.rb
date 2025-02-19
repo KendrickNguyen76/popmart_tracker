@@ -18,7 +18,9 @@ class PopTrackUI
 
     HELP_FILE = "code/docs/help.txt" 
 
-    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, "DELETE FIGURE" => true, "DELETE SET" => true}
+    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, 
+                          "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, 
+                          "DELETE FIGURE" => true, "DELETE SET" => true}
     VALID_COMMAND_HASH.default = false	
 
 
@@ -27,23 +29,6 @@ class PopTrackUI
         @tracker = PopTrackLogic.new
         @running = true
         print_start_up()
-    end
-	
-    # Prints the start up message for a popmart tracker program
-    def print_start_up
-        puts "Welcome to the Popmart Tracker!"
-        puts "Please type in \"HELP\" if you need assistance"
-        puts
-    end
-
-    # Prints out a header that includes the text provided
-    def print_header(text)
-        puts "\n=====#{text}====="
-    end
-	
-    # Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
-    def is_valid_command?(user_comm)
-        return VALID_COMMAND_HASH[user_comm.upcase]
     end
 
     # Runs the popmart tracker. Gets user's input and verifies that it is a 
@@ -61,6 +46,26 @@ class PopTrackUI
             end
         end
     end
+
+
+    private
+
+    # Prints the start up message for a popmart tracker program
+    def print_start_up
+        puts "Welcome to the Popmart Tracker!"
+        puts "Please type in \"HELP\" if you need assistance"
+        puts
+    end
+
+    # Prints out a header that includes the text provided
+    def print_header(text)
+        puts "\n=====#{text}====="
+    end
+	
+    # Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
+    def is_valid_command?(user_comm)
+        return VALID_COMMAND_HASH[user_comm.upcase]
+    end
 	
     # Needs to be given the user's input as a string. Determines which
     # command the user wants to carry out and performs it.
@@ -69,6 +74,7 @@ class PopTrackUI
 
         case command
         when "QUIT"
+            save_data()
             @running = false
             puts "\nExited Popmart Tracker"
         when "ADD SET"
@@ -168,7 +174,7 @@ class PopTrackUI
             new_figure_info = prompt_for_new_figure_info
 
             if can_add_figure?(set_key, new_figure_info)
-                puts "Figure #{new_figure.name} added to #{existing_set.brand} #{existing_set.series_name}"
+                puts "Figure #{new_figure_info[0]} added to #{existing_set.brand} #{existing_set.series_name}"
                 puts
                 break
             end
@@ -407,5 +413,10 @@ class PopTrackUI
 
         puts
     end    
-
+    
+    def save_data
+        puts "\nSaving data..."
+        @tracker.save_sets
+        puts "Saving complete!"
+    end
 end
