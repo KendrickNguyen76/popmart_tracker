@@ -1,5 +1,6 @@
 # Misc files
 .DS_Store
+*.db
 
 # Test files
 tests/*.db

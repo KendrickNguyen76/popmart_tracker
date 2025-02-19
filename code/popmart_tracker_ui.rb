@@ -18,7 +18,9 @@ class PopTrackUI
 
     HELP_FILE = "code/docs/help.txt" 
 
-    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, "DELETE FIGURE" => true, "DELETE SET" => true}
+    VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, 
+                          "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, 
+                          "DELETE FIGURE" => true, "DELETE SET" => true}
     VALID_COMMAND_HASH.default = false	
 
 
@@ -27,23 +29,6 @@ class PopTrackUI
         @tracker = PopTrackLogic.new
         @running = true
         print_start_up()
-    end
-	
-    # Prints the start up message for a popmart tracker program
-    def print_start_up
-        puts "Welcome to the Popmart Tracker!"
-        puts "Please type in \"HELP\" if you need assistance"
-        puts
-    end
-
-    # Prints out a header that includes the text provided
-    def print_header(text)
-        puts "\n=====#{text}====="
-    end
-	
-    # Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
-    def is_valid_command?(user_comm)
-        return VALID_COMMAND_HASH[user_comm.upcase]
     end
 
     # Runs the popmart tracker. Gets user's input and verifies that it is a 
@@ -61,6 +46,26 @@ class PopTrackUI
             end
         end
     end
+
+
+    private
+
+    # Prints the start up message for a popmart tracker program
+    def print_start_up
+        puts "Welcome to the Popmart Tracker!"
+        puts "Please type in \"HELP\" if you need assistance"
+        puts
+    end
+
+    # Prints out a header that includes the text provided
+    def print_header(text)
+        puts "\n=====#{text}====="
+    end
+	
+    # Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
+    def is_valid_command?(user_comm)
+        return VALID_COMMAND_HASH[user_comm.upcase]
+    end
 	
     # Needs to be given the user's input as a string. Determines which
     # command the user wants to carry out and performs it.
@@ -69,6 +74,7 @@ class PopTrackUI
 
         case command
         when "QUIT"
+            save_data()
             @running = false
             puts "\nExited Popmart Tracker"
         when "ADD SET"
@@ -92,9 +98,8 @@ class PopTrackUI
     
     # Handles ADD SET command
     def add_set 
-        new_set = get_new_set_info
-        @tracker.add_set_using_params(new_set[0], new_set[1], new_set[2]);
-        puts "\nSet #{new_set[0]} #{new_set[1]} created with price #{new_set[2]}"
+        new_set_info = get_new_set_info
+        can_add_set?(new_set_info)
         puts
     end
 	
@@ -148,6 +153,17 @@ class PopTrackUI
             return false
         end
     end
+    
+
+    def can_add_set?(new_set)
+        begin 
+            @tracker.get_set(new_set[0], new_set[1])
+            puts "\nSet #{new_set[0]} #{new_set[1]} already exists. Cancelling set addition."
+        rescue ArgumentError
+            @tracker.add_set_using_params(new_set[0], new_set[1], new_set[2]);
+            puts "\nSet #{new_set[0]} #{new_set[1]} created with price #{new_set[2]}"
+        end
+    end
 
     # Prints out each line in HELP_FILE
     def print_help_file
@@ -165,10 +181,10 @@ class PopTrackUI
 
             print "#{existing_set.brand} #{existing_set.series_name} was found\n\n"
 
-            new_figure = prompt_for_new_figure
+            new_figure_info = prompt_for_new_figure_info
 
-            if can_add_figure?(set_key, new_figure)
-                puts "Figure #{new_figure.name} added to #{existing_set.brand} #{existing_set.series_name}"
+            if can_add_figure?(set_key, new_figure_info)
+                puts "Figure #{new_figure_info[0]} added to #{existing_set.brand} #{existing_set.series_name}"
                 puts
                 break
             end
@@ -198,16 +214,17 @@ class PopTrackUI
     end
 	
     # Prompts user for information about the new figure that
-    # will be added. Returns a PopMartFigure object.
-    def prompt_for_new_figure
+    # will be added. Returns an array of all inputs
+    def prompt_for_new_figure_info
         print "Figure Name: "
         figure_name = gets.chomp
         figure_probability = get_probability_input
         figure_is_collected = get_yes_or_no_answer("Have you collected this figure?")
         figure_is_secret = get_yes_or_no_answer("Is this figure a secret?")
-
-        print "\nFigure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
-        return PopMartFigure.new(figure_name, figure_probability, figure_is_collected, figure_is_secret)
+        
+        puts
+        print "Figure Info => #{figure_name}, #{figure_probability}, #{figure_is_collected}, #{figure_is_secret}\n"
+        return [figure_name, figure_probability, figure_is_collected, figure_is_secret]
     end
 	
     # Prompts for a figure's probability. Will continually ask the
@@ -265,12 +282,12 @@ class PopTrackUI
         end
     end
 	
-    # Checks to see if the figure_to_be_added can be added to the set
+    # Checks to see if the new figure can be added to the set
     # represented by set_key. If it can, return true. If not, prints
     # out the error message and return false.
-    def can_add_figure?(set_key, figure_to_be_added)
+    def can_add_figure?(set_key, new_fig_info)
         begin
-            @tracker.add_to_specific_set(set_key, figure_to_be_added)
+            @tracker.add_fig_using_params(set_key, new_fig_info)
             return true
         rescue => error
             puts error.message
@@ -406,5 +423,10 @@ class PopTrackUI
 
         puts
     end    
-
+    
+    def save_data
+        puts "\nSaving data..."
+        @tracker.save_sets
+        puts "Saving complete!"
+    end
 end

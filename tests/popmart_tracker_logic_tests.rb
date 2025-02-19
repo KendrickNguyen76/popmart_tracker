@@ -40,7 +40,7 @@ class TestPopTrackLogic < Test::Unit::TestCase
 	
     # Tests that add_to_specific_set() allows you to 
     # add a figure to a specific set
-    def test_can_add_pop_mart_figure_to_specific_set
+    def test_can_add_popmart_figure_to_specific_set
         test_figure = PopMartFigure.new("name", 1/2, true)
 
         @test_tracker.add_set(@test_set)
@@ -48,6 +48,18 @@ class TestPopTrackLogic < Test::Unit::TestCase
         find_result = @test_tracker.sets["BRAND_SERIES NAME"].find_figure(test_figure.name)
 
         assert_equal(find_result.name, test_figure.name)
+    end
+
+    # Tests that add_fig_using_params() allows you to 
+    # add a figure to a specific set
+    def test_can_add_popmart_figure_with_add_fig_using_params
+        figure_info = ["name", 0.5, true, false]
+
+        @test_tracker.add_set(@test_set)
+        @test_tracker.add_fig_using_params("BRAND_SERIES NAME", figure_info)
+        find_result = @test_tracker.sets["BRAND_SERIES NAME"].find_figure(figure_info[0])
+
+        assert_equal(find_result.name, figure_info[0])
     end
 
     # Tests that get_set() correctly returns correct set
@@ -174,8 +186,7 @@ class TestPopTrackLogic < Test::Unit::TestCase
         assert_true(@test_tracker.changes[:marked_figures].empty?)
     end
 
-    # Tests that the tracker can update the database to reflect
-    # which figures have been marked as collected
+    # Tests that @changes[:marked_figures] is added to and cleared properly
     def test_changes_marked_figures_gets_cleared_when_saving
         @test_tracker.add_set(@test_set)
         test_figure = PopMartFigure.new("name", 1/2, false)
@@ -190,6 +201,113 @@ class TestPopTrackLogic < Test::Unit::TestCase
         @test_tracker.reload_sets
         
         assert_true(@test_tracker.changes[:marked_figures].empty?)
+    end
+    
+    # Tests that you can delete sets in the database from the tracker class
+    def test_deleting_sets_in_database_from_tracker
+        @test_tracker.add_set(@test_set)
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_true(@test_tracker.sets.values.length > 0)
+
+        @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_false(@test_tracker.sets.values.length > 0)
+        assert_raise_message("Set with name Series Name and brand Brand does not exist") {
+            @test_tracker.get_set(@test_set.brand, @test_set.series_name)
+        }
+    end
+    
+    # Tests that @changes[:deleted_sets] is cleared and added to properly
+    def test_changes_deleted_sets_is_cleared_when_saving
+        @test_tracker.add_set(@test_set)
+        @test_tracker.save_sets
+        @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
+        
+        assert_true(@test_tracker.changes[:deleted_sets].length > 0)
+
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_false(@test_tracker.changes[:deleted_sets].length > 0)
+    end
+
+    # This test reveals that there is a major bug in my current delete process
+    # It occurs when a set is newly added and hasn't been saved to the database yet.
+    # When I delete that set from @sets, it succeeds w/o problem, and adds the set
+    # to @changes[:deleted_sets]. However, this becomes a problem when I call save_sets
+    # The set i am trying to delete no longer exists in @sets, so it doesn't get saved.
+    # Therefore, the function freaks out since I am trying to delete a nonexistent set from
+    # the database. This test should verify that the bug has been fixed.
+    def test_newly_added_sets_that_are_then_deleted_get_ignored_during_save
+        @test_tracker.add_set(@test_set)
+        @test_tracker.delete_set(@test_set.brand, @test_set.series_name)
+        
+        begin
+            @test_tracker.save_sets
+        rescue StandardError => e
+            puts e.message
+            assert_true(false)
+        end
+    end
+    
+    # Tests that you can delete figures in the database from the tracker class
+    def test_deleting_figures_in_database_from_tracker
+        @test_tracker.add_set(@test_set)
+        set_key = @test_tracker.generate_dict_key(@test_set.brand, @test_set.series_name)
+        test_figure = PopMartFigure.new("name", 1/2, false)
+        @test_tracker.add_to_specific_set(set_key, test_figure)
+
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_true(@test_tracker.sets.values[0].figures.length > 0)
+
+        @test_tracker.delete_figure_in_specified_set(set_key, test_figure.name)
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+
+        assert_false(@test_tracker.sets.values[0].figures.length > 0)
+        assert_raise_message("Figure name does not exist in Brand Series Name") {
+            @test_tracker.delete_figure_in_specified_set(set_key, test_figure.name)
+        }
+    end
+    
+    # Tests that @changes[:delete_figures] is cleared and added to properly
+    def test_changes_deleted_figures_is_updated_when_saving
+        @test_tracker.add_set(@test_set)
+        set_key = @test_tracker.generate_dict_key(@test_set.brand, @test_set.series_name)
+        test_figure = PopMartFigure.new("name", 1/2, false)
+        @test_tracker.add_to_specific_set(set_key, test_figure)
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+        @test_tracker.delete_figure_in_specified_set(set_key, test_figure.name)
+
+        assert_true(@test_tracker.changes[:deleted_figures].length > 0)
+
+        @test_tracker.save_sets
+        @test_tracker.reload_sets
+        
+        assert_false(@test_tracker.changes[:deleted_figures].length > 0)
+    end
+   
+    # Tests to see if deleting figures has the same bug as deleting sets
+    def test_newly_added_figures_that_are_then_deleted_get_ignored_when_saving
+        @test_tracker.add_set(@test_set)
+        set_key = @test_tracker.generate_dict_key(@test_set.brand, @test_set.series_name)
+        test_figure = PopMartFigure.new("name", 1/2, false)
+        @test_tracker.add_to_specific_set(set_key, test_figure)
+        @test_tracker.delete_figure_in_specified_set(set_key, test_figure.name)
+        
+        begin
+            @test_tracker.save_sets
+        rescue StandardError => e
+            puts e.message
+            assert_true(false)
+        end
     end
 
     def teardown

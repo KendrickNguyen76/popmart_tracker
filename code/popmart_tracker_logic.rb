@@ -38,6 +38,8 @@ class PopTrackLogic
     def save_sets
         @db_loader.save_sets_into_db(@sets.values)
         update_db_collected_status
+        update_db_deleted_sets
+        update_db_deleted_figures
     end
 
     # Updates @sets so that it matches the current state of the database
@@ -63,10 +65,20 @@ class PopTrackLogic
         @sets[key] = PopMartSet.new(brand, series_name, price)
     end
 
-	# Needs to be given a name of a Popmart set, and a PopMartFigure object.
-	# Adds the object to the set with the specified name.
+    # Needs to be given a name of a Popmart set, and a PopMartFigure object.
+    # Adds the object to the set with the specified name.
     def add_to_specific_set(set_name, popmart_figure)
         @sets[set_name].add_figure(popmart_figure)
+    end
+
+    # Needs to be given a name of a Popmart set, and an array that
+    # contains all of the information to build a Popmart figure.
+    # Creates a popmart figure object, and adds it the set with
+    # the specified name
+    def add_fig_using_params(set_name, fig_info)
+        new_fig = PopMartFigure.new(fig_info[0], fig_info[1], 
+                                    fig_info[2], fig_info[3])
+        add_to_specific_set(set_name, new_fig)
     end
     
     # Needs to be given the name of a Popmart set and a PopMartFigure object.
@@ -80,6 +92,7 @@ class PopTrackLogic
     # Deletes the figure within the specified set.
     def delete_figure_in_specified_set(set_name, figure_name)
         @sets[set_name].delete_figure(figure_name)
+        @changes[:deleted_figures].push(figure_name)
     end
 
     # Needs to be given the name and brand of a set. Checks to see if it
@@ -98,7 +111,10 @@ class PopTrackLogic
     def delete_set(brand_name, series_name)
         key = generate_dict_key(brand_name, series_name)
         
-        @sets.delete(key) do
+        if @sets.has_key?(key)
+            @changes[:deleted_sets].push(@sets[key])
+            @sets.delete(key)
+        else
             raise ArgumentError.new "Set with name #{series_name} and brand #{brand_name} does not exist"
         end
     end
@@ -143,11 +159,25 @@ class PopTrackLogic
         return sets_hash
     end
 
-    # Iterates through changes[:marked_figures], and 
-    # updates all of their corresponding rows in the
-    # database so that they are marked as collected.
+    # Iterates through changes[:marked_figures], and updates
+    # all of their corresponding rows in the database so that
+    # they are marked as collected.
     def update_db_collected_status
         @db_loader.mark_figures_in_db(@changes[:marked_figures])
         @changes[:marked_figures].clear
+    end
+    
+    # Iterates through changes[:deleted_sets], and updates 
+    # the database so that every listed set gets removed.
+    def update_db_deleted_sets
+        @db_loader.delete_sets_in_db(@changes[:deleted_sets])
+        @changes[:deleted_sets].clear
+    end
+    
+    # Iterates through changes[:deleted_figures], and updates
+    # the database so that every listed figure gets removed
+    def update_db_deleted_figures
+        @db_loader.delete_figs_in_db(@changes[:deleted_figures])
+        @changes[:deleted_figures].clear
     end
 end
