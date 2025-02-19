@@ -98,9 +98,8 @@ class PopTrackUI
     
     # Handles ADD SET command
     def add_set 
-        new_set = get_new_set_info
-        @tracker.add_set_using_params(new_set[0], new_set[1], new_set[2]);
-        puts "\nSet #{new_set[0]} #{new_set[1]} created with price #{new_set[2]}"
+        new_set_info = get_new_set_info
+        can_add_set?(new_set_info)
         puts
     end
 	
@@ -152,6 +151,17 @@ class PopTrackUI
             return number >= 0.0
         rescue ArgumentError
             return false
+        end
+    end
+    
+
+    def can_add_set?(new_set)
+        begin 
+            @tracker.get_set(new_set[0], new_set[1])
+            puts "\nSet #{new_set[0]} #{new_set[1]} already exists. Cancelling set addition."
+        rescue ArgumentError
+            @tracker.add_set_using_params(new_set[0], new_set[1], new_set[2]);
+            puts "\nSet #{new_set[0]} #{new_set[1]} created with price #{new_set[2]}"
         end
     end
 
