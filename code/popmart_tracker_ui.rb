@@ -21,8 +21,15 @@ class PopTrackUI
     VALID_COMMAND_HASH = {"ADD SET" => true, "QUIT" => true, "HELP" => true, "ADD FIGURE" => true, 
                           "MARK FIGURE" => true, "VIEW SET" => true, "VIEW FIGURE" => true, 
                           "DELETE FIGURE" => true, "DELETE SET" => true}
-    VALID_COMMAND_HASH.default = false	
-
+    VALID_COMMAND_HASH.default = false
+    
+    # Custom error class for exiting certain commands
+    # w/o executing any significant actions.
+    class ExitCommandError < StandardError
+        def initialize(msg="<Exited Previous Command>")
+            super
+        end
+    end
 
     # Constructor for a PopTrackUI object
     def initialize
@@ -61,38 +68,69 @@ class PopTrackUI
     def print_header(text)
         puts "\n=====#{text}====="
     end
-	
+
     # Checks to see if the string given to it is a valid command within VALID_COMMAND_HASH.
     def is_valid_command?(user_comm)
         return VALID_COMMAND_HASH[user_comm.upcase]
     end
-	
+
     # Needs to be given the user's input as a string. Determines which
     # command the user wants to carry out and performs it.
     def execute_command(input)
         command = input.upcase
-
+        
+        begin
+            execute_misc_commands(command)
+            execute_set_commands(command)
+            execute_fig_commands(command)
+        rescue ExitCommandError => e
+            # If the ExitCommandError gets raised, this means
+            # that the user wants to stop executing a specific
+            # command. When this happens, print out a message,
+            # and then allow the user to input a different
+            # command that they would like to carry out.
+            print  e.message + "\n\n"
+        end
+    end
+    
+    # Determines which command the user wants to carry out
+    # and performs it. Focuses on QUIT and HELP.
+    def execute_misc_commands(command)
         case command
         when "QUIT"
             save_data()
             @running = false
             puts "\nExited Popmart Tracker"
-        when "ADD SET"
-            add_set()
         when "HELP"
             print_help_file()
+        end
+    end
+
+    # Determines which command the user wants to carry out
+    # and performs it. Focuses on set related actions.
+    def execute_set_commands(command)
+        case command
+        when "ADD SET"
+            add_set()
+        when "VIEW SET"
+            view_set()
+        when "DELETE SET"
+            delete_set_command()
+        end
+    end
+
+    # Determines which command the user wants to carry out
+    # and performs it. Focuses on figure related actions.
+    def execute_fig_commands(command)
+        case command
         when "ADD FIGURE"
             add_figure()
         when "MARK FIGURE"
             mark_figure()
-        when "VIEW SET"
-            view_set()
         when "VIEW FIGURE"
             view_figure()
         when "DELETE FIGURE"
             delete_figure()
-        when "DELETE SET"
-            delete_set_command()
         end
     end
     
@@ -142,7 +180,7 @@ class PopTrackUI
 
         return price
     end
-	
+
     # Checks to see if the given input is a valid 
     # value for a price.
     def can_convert_price_input?(price_input)
@@ -197,9 +235,10 @@ class PopTrackUI
 	
     # Prompts the user for the series and brand name of a set
     # If the set does exist, return it. If not, print the error
-    # message and make them try again.
+    # message and make them try again. If the user inputs an
+    # invalid set twice, raise an ExitCommandError exception.
     def prompt_for_set_name	
-        while true
+        2.times do
             print "Set Brand: " 
             brand = gets.chomp
 
@@ -213,6 +252,8 @@ class PopTrackUI
                 puts
             end
         end
+        
+        raise ExitCommandError.new
     end
 	
     # Prompts user for information about the new figure that
@@ -429,6 +470,7 @@ class PopTrackUI
     # Saves all recent changes
     def save_data
         puts "\nSaving data..."
+        sleep 2 # Wait for 2 seconds before saving
         @tracker.save_sets
         puts "Saving complete!"
     end
