@@ -1,15 +1,18 @@
 # PopMart Set Tracker - Created by Kendrick Nguyen
 
+A simple terminal application for recording the PopMart sets and figures you have collected
+
 ## Requirements
 
 **Language**
 * Ruby Version 3.3.6
+    * May work with older versions of Ruby, but proceed at your own risk!
 
-**Packages**
-* sqlite3 Rubygem v2.5.0
+**Packages/Rubygems**
+* sqlite3 version 2.5.0
 
 **System Requirements**
-* Works on Linux or MacOS
+* Works on Linux, MacOS, or any other UNIX based OS
 * Does not currently work on Windows
 
 **This program runs using a CLI/TUI, so a terminal emulator is required.**
@@ -21,4 +24,3 @@
 4. To view commands, type HELP
 
 **The application will automatically save itself when you enter the QUIT command**
-
