@@ -1,10 +1,6 @@
 # Misc files
-.DS_Store
 *.db
 
 # Test files
 tests/*.db
 
-# Bash files
-setup.sh
-teardown.sh
